@@ -6,7 +6,7 @@ function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
-    height: 670,
+    height: 580,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux'
@@ -36,6 +36,10 @@ function createWindow() {
   } else {
     mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'))
   }
+
+  mainWindow.removeMenu();
+  mainWindow.setResizable(false);
+  mainWindow.setAlwaysOnTop(true, 'screen')
 }
 
 // This method will be called when Electron has finished

@@ -1,0 +1,37 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: sans-serif;
+
+}
+
+.mainBoard {
+  background-color: white;
+  height: 400px;
+  width: 740px;
+  box-shadow: #aaa 0px 0px 10px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.upload-form {
+  margin: 0 30px 0 30px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.dropzone-container {
+  display: flex;
+  justify-content:space-between;
+  width: 100%;
+}
+
+.upload-details {
+  display: flex;
+  font-size: 14px;
+  color: #aaa;
+  margin: 10px 0 10px 0;
+}
