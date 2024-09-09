@@ -1,8 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import './DropZone.css';
-import Papelera from '../../resources/PapeleraIcon.png';
-import Archivos from '../../resources/ArchivosIcon.png';
 
 export default function DropZone({ text_file }) {
   const [Hover, setHover] = useState(false)
@@ -17,7 +14,7 @@ export default function DropZone({ text_file }) {
   });
 
   const dropZoneStyle = {
-    dropZone: {
+    dropZoneContainer: {
       width: '47%',
       height: '200px',
       borderWidth: '2px',
@@ -31,22 +28,8 @@ export default function DropZone({ text_file }) {
     }
   }
   return (
-    <div {...getRootProps()} 
-      style={dropZoneStyle.dropZone} 
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}>
-
-        <input {...getInputProps()} />
-
-        {isDragActive ? (
-          <p>Drop the files here...</p>
-        ) : (
-          <p style={dropZoneStyle.dropText}>
-            <span style={dropZoneStyle.fileSource}>{text_file}</span>
-            <br />Drag and Drop File or <span style={dropZoneStyle.chooseFile}>Choose File</span>
-          </p>
-        )}
-      </div>
+    <div style={dropZoneStyle.dropZoneContainer}>
+    </div>
   );
 }
 
