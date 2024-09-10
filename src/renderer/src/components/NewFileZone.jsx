@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import Button from './Button.jsx';
 
 export default function NewFileZone() {
 
@@ -11,7 +12,8 @@ export default function NewFileZone() {
       borderRadius: '10px',
       display: 'flex',
       alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.1)',
+      position: 'relative',
+      backgroundColor: isNewFileReady ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
     }
   }
 
@@ -19,7 +21,18 @@ export default function NewFileZone() {
     <div style={style.newFileZone}>
       {!isNewFileReady && (
         <>
-          
+          <Button
+            height='35px'
+            width='100px'
+            text='Compare'
+            backgroundColor='#05549D'
+            borderRadius='10px'
+            textColor='white'
+            position='absolute'
+            top='7.5px'
+            left='572.5px'
+            cursor='pointer'
+          />
         </>
       )}
     </div>
