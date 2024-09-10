@@ -65,6 +65,8 @@ export default function MainBoard() {
         height='auto'
         textColor='#A2A2A2'
         margin='0 0 0 30px'
+        textDecoration='underline #A2A2A2'
+        cursor='pointer'
       />
 
     </div>
