@@ -4,7 +4,6 @@ import DropZone from './DropZone.jsx';
 import NewFileZone from './NewFileZone.jsx';
 import Button from './Button.jsx';
 import helpIcon from '../resources/helpIcon.png';
-import { useDropzone } from 'react-dropzone'
 
 export default function MainBoard() {
 
