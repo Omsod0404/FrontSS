@@ -37,7 +37,12 @@ export default function Button(props) {
   }
 
   return (
-    <button style={buttonStyle.button} onMouseEnter={()=> setHover(true)} onMouseLeave={()=> setHover(false)}>
+    <button 
+      style={buttonStyle.button} 
+      onMouseEnter={()=> setHover(true)} 
+      onMouseLeave={()=> setHover(false)} 
+      disabled={props.disabled}
+      >
       {props.icon && <img src={props.icon} style={buttonStyle.icon}/>}
       <p style={buttonStyle.text}>{props.text}</p>
     </button>

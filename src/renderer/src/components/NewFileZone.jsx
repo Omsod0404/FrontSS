@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import Button from './Button.jsx';
 
-export default function NewFileZone() {
+export default function NewFileZone({filePaths}) {
 
   const [isNewFileReady, setIsNewFileReady] = useState(false);
 
@@ -25,13 +25,14 @@ export default function NewFileZone() {
             height='35px'
             width='100px'
             text='Compare'
-            backgroundColor='#05549D'
+            backgroundColor={((filePaths.SIIA.length >= 1) && (filePaths.CH.length >= 1)) ? '#05549D' : '#aaa'}
             borderRadius='10px'
             textColor='white'
             position='absolute'
             top='7.5px'
             left='572.5px'
             cursor='pointer'
+            disabled={((filePaths.SIIA.length >= 1) && (filePaths.CH.length >= 1)) ? false : true}
           />
         </>
       )}

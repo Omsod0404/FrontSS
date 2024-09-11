@@ -66,7 +66,7 @@ export default function MainBoard() {
           <p style={{margin: 0, padding: 0}}>Supported formats: XLS, XLSX</p>
         </div>
 
-        <NewFileZone/>
+        <NewFileZone filePaths={filePaths}/>
 
       </form>
 
