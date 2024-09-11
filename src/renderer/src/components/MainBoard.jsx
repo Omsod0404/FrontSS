@@ -37,6 +37,11 @@ export default function MainBoard() {
     },
   }
 
+  const [filePaths, setFilePaths] = useState({
+    SIIA: [],
+    CH: [],
+  });
+
   return (
     <div style={styles.mainBoard}>
 
@@ -45,8 +50,16 @@ export default function MainBoard() {
       <form style={styles.uploadForm}>
 
         <div style={styles.dropZoneContainer}>
-            <DropZone text_file='SIIA'/>
-            <DropZone text_file='CH'/>
+            <DropZone 
+              text_file='SIIA' 
+              filePaths={filePaths.SIIA} 
+              setFilePaths={(paths) => setFilePaths({ ...filePaths, SIIA: paths })} 
+              />
+            <DropZone 
+              text_file='CH' 
+              filePaths={filePaths.CH} 
+              setFilePaths={(paths) => setFilePaths({ ...filePaths, CH: paths })} 
+              />
         </div>
 
         <div style={styles.details}>

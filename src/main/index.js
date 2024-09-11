@@ -40,6 +40,8 @@ function createWindow() {
   mainWindow.removeMenu();
   mainWindow.setResizable(false);
   mainWindow.setAlwaysOnTop(true, 'screen')
+
+  mainWindow.webContents.openDevTools({ mode: 'detach' })
 }
 
 // This method will be called when Electron has finished

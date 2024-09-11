@@ -4,20 +4,21 @@ import Papelera from "../resources/PapeleraIcon.png";
 import CargaArchivos from "../resources/ArchivosIcon.png";
 import Button from "./Button";
 
-export default function DropZone({ text_file, setFilePaths, filePaths}) {
-  // Guardamos el estado de los paths de los archivos
-  const [filePaths, setFilePaths] = useState([]);
+export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
 
   // Función para manejar el drop de archivos
   const onDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles.length) {
       const paths = acceptedFiles.map((file) => file.path);
-      setFilePaths(paths);  // Guarda los paths
+      
+      // Sobrescribe los paths anteriores
+      setFilePaths(paths);  
+
       console.log(paths);   // Imprime los paths en consola
     } else {
-      setFilePaths(['Error']);
+      setFilePaths(['Error']);  // Maneja el error
     }
-  }, []);
+  }, [setFilePaths]);  // Añade setFilePaths como dependencia
 
   // Hook para dropzone
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
@@ -35,8 +36,6 @@ export default function DropZone({ text_file, setFilePaths, filePaths}) {
       borderStyle: 'dashed',
       borderColor: '#aaa',
       borderRadius: '10px',
-      //borderImage: 'repeating-linear-gradient(to , gray 0, gray 5px, transparent 5px, transparent 15px) 10',
-
       display: 'flex',
       position: 'relative',
       textAlign: 'center',
@@ -49,7 +48,6 @@ export default function DropZone({ text_file, setFilePaths, filePaths}) {
       fontWeight: "bold",
       fontSize: "15px",
       fontFamily: 'Arial, sans-serif',
-
     },
     subContainer: {
       alignItems: "center",
@@ -85,13 +83,12 @@ export default function DropZone({ text_file, setFilePaths, filePaths}) {
     <div style={dropZoneStyle.dropZoneContainer} {...getRootProps()}>
 
       <Button
-        //onClick={() => setFilePaths([])}
-        icon = {Papelera}
-        iconSize = "25px"
-        position = "absolute"
-        cursor = "pointer"
-        top = "5px"
-        left = "90%"
+        icon={Papelera}
+        iconSize="25px"
+        position="absolute"
+        cursor="pointer"
+        top="5px"
+        left="90%"
       />
 
       <input {...getInputProps()} />
@@ -103,19 +100,19 @@ export default function DropZone({ text_file, setFilePaths, filePaths}) {
           <span style={dropZoneStyle.fileSourceText}>{text_file}</span>
           <img src={CargaArchivos} style={dropZoneStyle.iconSubida} alt="Upload" />
           <p style={dropZoneStyle.dropText}>
-            Drag and Drop File or  
+            Drag and Drop File or 
             <span style={dropZoneStyle.textChoose} onClick={open}>Choose File</span>
           </p>
         </div>
-          
       )}
 
       {/* Renderiza los paths de los archivos */}
-      <ul>
-        {filePaths.map((fp, index) => (
+      {/* <ul>
+        {filePaths && filePaths.map((fp, index) => (
           <li key={index}>{fp}</li>
         ))}
-      </ul>
+      </ul> */}
+
     </div>
   );
 }
