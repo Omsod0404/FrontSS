@@ -4,6 +4,9 @@ import Papelera from "../resources/PapeleraIcon.png";
 import CargaArchivos from "../resources/ArchivosIcon.png";
 import Button from "./Button";
 
+import Swal from 'sweetalert2';
+import styled from 'styled-components';
+
 export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
 
   // Función para manejar el drop de archivos
@@ -19,7 +22,7 @@ export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
 
       console.log(paths);   // Imprime los paths en consola
     } else {
-      window.alert('Archivo no válido. Solo se permiten archivos .xls y .xlsx.');
+      showErrorTypeFile();
     }
   }, [setFilePaths]);
 
@@ -80,6 +83,24 @@ export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
       fontFamily: 'Arial, sans-serif',
       marginRight: "8px",
     },
+  };
+
+  
+
+  const showErrorTypeFile = () => {
+    Swal.fire({
+      title: 'Error!',
+      text: 'Archivo no válido. Solo se permiten archivos .xls y .xlsx.',
+      icon: 'error',
+      confirmButtonText: 'Ok',
+      didOpen: () => {
+        const popup = document.querySelector('.swal2-popup');
+        if (popup) {
+          popup.style.fontFamily = 'Arial, sans-serif'; // Cambia la fuente
+          popup.style.fontSize = '14px'; // Cambia el tamaño de la fuente
+        }
+      }
+    });
   };
 
   return (
