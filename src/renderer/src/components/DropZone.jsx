@@ -101,7 +101,7 @@ export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
       ) : (
         <div style={dropZoneStyle.subContainer}>
           <span style={dropZoneStyle.fileSourceText}>{text_file}</span>
-          <img src={CargaArchivos} style={dropZoneStyle.iconSubida} alt="Upload" />
+          <img src={CargaArchivos} style={dropZoneStyle.iconSubida} alt="Upload" draggable='false'/>
           <p style={dropZoneStyle.dropText}>
             Drag and Drop File or 
             <span style={dropZoneStyle.textChoose} onClick={open}>Choose File</span>

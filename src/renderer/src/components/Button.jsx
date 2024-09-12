@@ -43,7 +43,7 @@ export default function Button(props) {
       onMouseLeave={()=> setHover(false)} 
       disabled={props.disabled}
       >
-      {props.icon && <img src={props.icon} style={buttonStyle.icon}/>}
+      {props.icon && <img src={props.icon} style={buttonStyle.icon} draggable='false'/>}
       <p style={buttonStyle.text}>{props.text}</p>
     </button>
   )

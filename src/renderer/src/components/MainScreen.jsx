@@ -10,8 +10,8 @@ export default function MainScreen() {
   return (
     <div style={mainScreenStyle.mainContainer}>
       <div style={mainScreenStyle.logosContainer}>
-        <img src={logoCD2} style={mainScreenStyle.logos}/>
-        <img src={logoUAQ} style={mainScreenStyle.logos}/>
+        <img src={logoCD2} style={mainScreenStyle.logos} draggable='false'/>
+        <img src={logoUAQ} style={mainScreenStyle.logos} draggable='false'/>
       </div>
       <div style={mainScreenStyle.contentContainer}>
         <MainBoard/>
@@ -26,6 +26,7 @@ const mainScreenStyle = {
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: '#F6F7F8',
+    userSelect: 'none',
   },
   logosContainer: {
     height: '100px',
