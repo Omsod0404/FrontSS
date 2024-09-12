@@ -29,7 +29,7 @@ export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
       setFileName(validFiles[0].name);
       console.log(paths);   // Imprime los paths en consola
     } else {
-      window.alert('Archivo no válido. Solo se permiten archivos .xls y .xlsx.');
+      showErrorTypeFile();
     }
   }, [setFilePaths]);
 
@@ -101,7 +101,6 @@ export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
     },
   };
 
-  // Función para mostrar error de tipo de archivo
   const showErrorTypeFile = () => {
     Swal.fire({
       title: 'Error!',
