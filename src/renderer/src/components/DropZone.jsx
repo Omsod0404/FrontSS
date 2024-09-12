@@ -2,9 +2,17 @@ import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import Papelera from "../resources/PapeleraIcon.png";
 import CargaArchivos from "../resources/ArchivosIcon.png";
+import DropeedFile from "../resources/dropped_file_icon.png";
 import Button from "./Button";
 
+import Swal from 'sweetalert2';
+import styled from 'styled-components';
+
 export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
+  // Nuevos estados para manejar el estado de carga del archivo
+  const [fileDropped, setFileDropped] = useState(false);
+  const [fileUploaded, setFileUploaded] = useState(false);
+  const [fileName, setFileName] = useState('');
 
   // Función para manejar el drop de archivos
   const onDrop = useCallback((acceptedFiles) => {
@@ -16,18 +24,29 @@ export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
     if (validFiles.length) {
       const paths = validFiles.map((file) => file.path);
       setFilePaths(paths);  // Guarda los paths de archivos válidos
-
+      setFileDropped(true);
+      setFileUploaded(true);
+      setFileName(validFiles[0].name);
       console.log(paths);   // Imprime los paths en consola
     } else {
       window.alert('Archivo no válido. Solo se permiten archivos .xls y .xlsx.');
     }
   }, [setFilePaths]);
 
+  // Nueva función para eliminar el archivo
+  const removeFile = () => {
+    setFilePaths([]);
+    setFileDropped(false);
+    setFileUploaded(false);
+    setFileName('');
+  };
+
   // Hook para dropzone
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop,
     accept: '.xls,.xlsx',
     noClick: true, // Desactiva el click en la zona de drop
+    disabled: fileUploaded, // Deshabilita el dropzone cuando se ha cargado un archivo
   });
 
   // Estilos de la zona de drop
@@ -82,9 +101,25 @@ export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
     },
   };
 
+  // Función para mostrar error de tipo de archivo
+  const showErrorTypeFile = () => {
+    Swal.fire({
+      title: 'Error!',
+      text: 'Archivo no válido. Solo se permiten archivos .xls y .xlsx.',
+      icon: 'error',
+      confirmButtonText: 'Ok',
+      didOpen: () => {
+        const popup = document.querySelector('.swal2-popup');
+        if (popup) {
+          popup.style.fontFamily = 'Arial, sans-serif'; // Cambia la fuente
+          popup.style.fontSize = '14px'; // Cambia el tamaño de la fuente
+        }
+      }
+    });
+  };
+
   return (
     <div style={dropZoneStyle.dropZoneContainer} {...getRootProps()}>
-
       <Button
         icon={Papelera}
         iconSize="25px"
@@ -92,6 +127,7 @@ export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
         cursor="pointer"
         top="5px"
         left="90%"
+        onClick={removeFile} // Agregado el evento onClick para eliminar el archivo
       />
 
       <input {...getInputProps()} />
@@ -100,12 +136,21 @@ export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
         <p style={dropZoneStyle.dropText}>Drop the files here...</p>
       ) : (
         <div style={dropZoneStyle.subContainer}>
-          <span style={dropZoneStyle.fileSourceText}>{text_file}</span>
-          <img src={CargaArchivos} style={dropZoneStyle.iconSubida} alt="Upload" draggable='false'/>
-          <p style={dropZoneStyle.dropText}>
-            Drag and Drop File or 
-            <span style={dropZoneStyle.textChoose} onClick={open}>Choose File</span>
-          </p>
+          {!fileDropped && <span style={dropZoneStyle.fileSourceText}>{text_file}</span>}
+          <img
+            src={fileDropped ? DropeedFile : CargaArchivos}
+            style={dropZoneStyle.iconSubida}
+            alt="Upload"
+            draggable='false'
+          />
+          {!fileDropped ? (
+            <p style={dropZoneStyle.dropText}>
+              Drag and Drop File or
+              <span style={dropZoneStyle.textChoose} onClick={open}>Choose File</span>
+            </p>
+          ) : (
+            <p style={dropZoneStyle.dropText}>{fileName}</p>
+          )}
         </div>
       )}
 
@@ -115,7 +160,6 @@ export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
           <li key={index}>{fp}</li>
         ))}
       </ul> */}
-
     </div>
   );
 }
