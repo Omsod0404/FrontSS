@@ -8,17 +8,20 @@ export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
 
   // Función para manejar el drop de archivos
   const onDrop = useCallback((acceptedFiles) => {
-    if (acceptedFiles.length) {
-      const paths = acceptedFiles.map((file) => file.path);
-      
-      // Sobrescribe los paths anteriores
-      setFilePaths(paths);  
+    // Filtrar archivos que no sean .xls o .xlsx
+    const validFiles = acceptedFiles.filter((file) =>
+      file.name.endsWith('.xls') || file.name.endsWith('.xlsx')
+    );
+
+    if (validFiles.length) {
+      const paths = validFiles.map((file) => file.path);
+      setFilePaths(paths);  // Guarda los paths de archivos válidos
 
       console.log(paths);   // Imprime los paths en consola
     } else {
-      setFilePaths(['Error']);  // Maneja el error
+      window.alert('Archivo no válido. Solo se permiten archivos .xls y .xlsx.');
     }
-  }, [setFilePaths]);  // Añade setFilePaths como dependencia
+  }, [setFilePaths]);
 
   // Hook para dropzone
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
