@@ -2,15 +2,12 @@ import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import Papelera from "../resources/PapeleraIcon.png";
 import CargaArchivos from "../resources/ArchivosIcon.png";
-import DropeedFile from "../resources/dropped_file_icon.png";
+import DroppedFile from "../resources/dropped_file_icon.png";
 import Button from "./Button";
-
 import Swal from 'sweetalert2';
-import styled from 'styled-components';
 
 export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
-  // Nuevos estados para manejar el estado de carga del archivo
-  const [fileDropped, setFileDropped] = useState(false);
+  // Estado para manejar la carga de archivos
   const [fileUploaded, setFileUploaded] = useState(false);
   const [fileName, setFileName] = useState('');
 
@@ -24,9 +21,8 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
     if (validFiles.length) {
       const paths = validFiles.map((file) => file.path);
       setFilePaths(paths);  // Guarda los paths de archivos válidos
-      setFileDropped(true);
-      setFileUploaded(true);
-      setFileName(validFiles[0].name);
+      setFileUploaded(true); // Activa el estado de archivo cargado
+      setFileName(validFiles[0].name); // Guarda el nombre del archivo
       console.log(paths);   // Imprime los paths en consola
     } else {
       showErrorTypeFile();
@@ -39,15 +35,16 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
     if (filePaths.length) {
       setFilePaths(filePaths); // Guarda los paths completos obtenidos desde el explorador
       console.log(filePaths);   // Imprime los paths en consola
+      setFileUploaded(true); // Activa el estado de archivo cargado
+      setFileName(filePaths[0].split('\\').pop()); // Extrae el nombre del archivo del path
     } else {
-      window.alert('No se seleccionó ningún archivo o el archivo no es válido.');
+      showErrorTypeFile();
     }
   };
 
   // Nueva función para eliminar el archivo
   const removeFile = () => {
     setFilePaths([]);
-    setFileDropped(false);
     setFileUploaded(false);
     setFileName('');
   };
@@ -146,30 +143,24 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
         <p style={dropZoneStyle.dropText}>Drop the files here...</p>
       ) : (
         <div style={dropZoneStyle.subContainer}>
-          {!fileDropped && <span style={dropZoneStyle.fileSourceText}>{text_file}</span>}
-          <img
-            src={fileDropped ? DropeedFile : CargaArchivos}
-            style={dropZoneStyle.iconSubida}
-            alt="Upload"
-            draggable='false'
-          />
-          {!fileDropped ? (
-            <p style={dropZoneStyle.dropText}>
-              Drag and Drop File or
-              <span style={dropZoneStyle.textChoose} onClick={open}>Choose File</span>
-            </p>
+          {/* Mostrar el nombre del archivo y el ícono correspondiente */}
+          {fileUploaded ? (
+            <>
+              <img src={DroppedFile} style={dropZoneStyle.iconSubida} alt="Archivo Cargado" draggable='false'/>
+              <p style={dropZoneStyle.dropText}>{fileName}</p>
+            </>
           ) : (
-            <p style={dropZoneStyle.dropText}>{fileName}</p>
+            <>
+              <span style={dropZoneStyle.fileSourceText}>{text_file}</span> 
+              <img src={CargaArchivos} style={dropZoneStyle.iconSubida} alt="Upload" draggable='false'/>
+              <p style={dropZoneStyle.dropText}>
+                Drag and Drop File or 
+                <span style={dropZoneStyle.textChoose} onClick={handleFileDialog}>Choose File</span>
+              </p>
+            </>
           )}
         </div>
       )}
-
-      {/* Renderiza los paths de los archivos */}
-      {/* <ul>
-        {filePaths && filePaths.map((fp, index) => (
-          <li key={index}>{fp}</li>
-        ))}
-      </ul> */}
     </div>
   );
 }
