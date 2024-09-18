@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react'
-import Button from './Button.jsx';
+import React, { useEffect, useState } from 'react';
+import Button from './Button.jsx'; // Asegúrate de que el botón esté correctamente importado
 
-export default function NewFileZone({filePaths}) {
+export default function NewFileZone({ filePaths }) {
+  const [isComparing, setIsComparing] = useState(false);
 
   const [isNewFileReady, setIsNewFileReady] = useState(false);
   const [tempFolderPath, setTempFolderPath] = useState('');
@@ -17,6 +18,15 @@ export default function NewFileZone({filePaths}) {
   const showTempFolderPath = () => {
     console.log(tempFolderPath);
   }
+  const handleCompareClick = () => {
+    setIsComparing(true);
+    // Lógica adicional de comparación podría ir aquí
+  };
+
+  const handleCancelClick = () => {
+    setIsComparing(false);
+    // Lógica para detener el proceso de comparación
+  };
 
   const style = {
     newFileZone: {
@@ -26,13 +36,36 @@ export default function NewFileZone({filePaths}) {
       display: 'flex',
       alignItems: 'center',
       position: 'relative',
-      backgroundColor: isNewFileReady ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
+      backgroundColor: isComparing ? '#f3f5f7' : '',
+    },
+    comparingText: {
+      marginLeft: '20px',
+      fontSize: '12px',
+      fontWeight: 'bold',
+      color: 'black',
+      marginRight: '8px',
+      fontFamily: 'Arial, sans-serif',
+    },
+    spinner: {
+      border: '2px solid black',
+      borderTop: '2px solid white',
+      borderRadius: '50%',
+      width: '13px',
+      height: '13px',
+      animation: 'spin 2s linear infinite',
+    },
+    '@keyframes spin': {
+      '0%': { transform: 'rotate(0deg)' },
+      '100%': { transform: 'rotate(360deg)' }
+    },
+    button: {
+      marginLeft: '10px',
     }
-  }
+  };
 
   return (
     <div style={style.newFileZone}>
-      {!isNewFileReady && (
+      {!isComparing && (
         <>
           <Button
             height='35px'
@@ -46,10 +79,34 @@ export default function NewFileZone({filePaths}) {
             left='572.5px'
             cursor='pointer'
             disabled={((filePaths.SIIA.length >= 1) && (filePaths.CH.length >= 1)) ? false : true}
-            onClick={() => showTempFolderPath()}
+            onClick={handleCompareClick}
+          />
+        </>
+      )}
+
+      {isComparing && (
+        <>
+          <p style={style.comparingText}>Comparing</p>
+          <div style={style.spinner}></div>
+          <Button
+            height='35px'
+            width='90px'
+            text='Cancel'
+            backgroundColor='white'
+            borderRadius='5px'
+            border = '1px solid #E3E3E3'
+            textColor='black'
+            fontSize = '13px'
+            position='absolute'
+            top='7.5px'
+            left='572.5px'
+            cursor='pointer'
+            fontWeight = 'bold'
+            onClick={handleCancelClick}
+            style={style.button}
           />
         </>
       )}
     </div>
-  )
+  );
 }
