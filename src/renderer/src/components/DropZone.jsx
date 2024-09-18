@@ -2,12 +2,14 @@ import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import Papelera from "../resources/PapeleraIcon.png";
 import CargaArchivos from "../resources/ArchivosIcon.png";
+import DroppedFile from "../resources/dropped_file_icon.png";
 import Button from "./Button";
-
 import Swal from 'sweetalert2';
-import styled from 'styled-components';
 
-export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
+export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
+  // Estado para manejar la carga de archivos
+  const [fileUploaded, setFileUploaded] = useState(false);
+  const [fileName, setFileName] = useState('');
 
   // Función para manejar el drop de archivos
   const onDrop = useCallback((acceptedFiles) => {
@@ -19,18 +21,40 @@ export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
     if (validFiles.length) {
       const paths = validFiles.map((file) => file.path);
       setFilePaths(paths);  // Guarda los paths de archivos válidos
-
+      setFileUploaded(true); // Activa el estado de archivo cargado
+      setFileName(validFiles[0].name); // Guarda el nombre del archivo
       console.log(paths);   // Imprime los paths en consola
     } else {
       showErrorTypeFile();
     }
   }, [setFilePaths]);
 
+  // Función para manejar la selección manual de archivos desde el explorador
+  const handleFileDialog = async () => {
+    const filePaths = await window.electronAPI.openFileDialog();
+    if (filePaths.length) {
+      setFilePaths(filePaths); // Guarda los paths completos obtenidos desde el explorador
+      console.log(filePaths);   // Imprime los paths en consola
+      setFileUploaded(true); // Activa el estado de archivo cargado
+      setFileName(filePaths[0].split('\\').pop()); // Extrae el nombre del archivo del path
+    } else {
+      showErrorTypeFile();
+    }
+  };
+
+  // Nueva función para eliminar el archivo
+  const removeFile = () => {
+    setFilePaths([]);
+    setFileUploaded(false);
+    setFileName('');
+  };
+
   // Hook para dropzone
-  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: '.xls,.xlsx',
     noClick: true, // Desactiva el click en la zona de drop
+    disabled: fileUploaded, // Deshabilita el dropzone cuando se ha cargado un archivo
   });
 
   // Estilos de la zona de drop
@@ -85,8 +109,6 @@ export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
     },
   };
 
-  
-
   const showErrorTypeFile = () => {
     Swal.fire({
       icon: 'error',
@@ -107,7 +129,6 @@ export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
 
   return (
     <div style={dropZoneStyle.dropZoneContainer} {...getRootProps()}>
-
       <Button
         icon={Papelera}
         iconSize="25px"
@@ -115,6 +136,7 @@ export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
         cursor="pointer"
         top="5px"
         left="90%"
+        onClick={removeFile} // Agregado el evento onClick para eliminar el archivo
       />
 
       <input {...getInputProps()} />
@@ -123,22 +145,24 @@ export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
         <p style={dropZoneStyle.dropText}>Drop the files here...</p>
       ) : (
         <div style={dropZoneStyle.subContainer}>
-          <span style={dropZoneStyle.fileSourceText}>{text_file}</span>
-          <img src={CargaArchivos} style={dropZoneStyle.iconSubida} alt="Upload" draggable='false'/>
-          <p style={dropZoneStyle.dropText}>
-            Drag and Drop File or 
-            <span style={dropZoneStyle.textChoose} onClick={open}>Choose File</span>
-          </p>
+          {/* Mostrar el nombre del archivo y el ícono correspondiente */}
+          {fileUploaded ? (
+            <>
+              <img src={DroppedFile} style={dropZoneStyle.iconSubida} alt="Archivo Cargado" draggable='false'/>
+              <p style={dropZoneStyle.dropText}>{fileName}</p>
+            </>
+          ) : (
+            <>
+              <span style={dropZoneStyle.fileSourceText}>{text_file}</span> 
+              <img src={CargaArchivos} style={dropZoneStyle.iconSubida} alt="Upload" draggable='false'/>
+              <p style={dropZoneStyle.dropText}>
+                Drag and Drop File or 
+                <span style={dropZoneStyle.textChoose} onClick={handleFileDialog}>Choose File</span>
+              </p>
+            </>
+          )}
         </div>
       )}
-
-      {/* Renderiza los paths de los archivos */}
-      {/* <ul>
-        {filePaths && filePaths.map((fp, index) => (
-          <li key={index}>{fp}</li>
-        ))}
-      </ul> */}
-
     </div>
   );
 }
