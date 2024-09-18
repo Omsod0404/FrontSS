@@ -1,9 +1,22 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import Button from './Button.jsx';
 
 export default function NewFileZone({filePaths}) {
 
   const [isNewFileReady, setIsNewFileReady] = useState(false);
+  const [tempFolderPath, setTempFolderPath] = useState('');
+
+  useEffect(() => {
+    const fetchTempFolder = async () => {
+      const folderPath = await window.api.getTempFolder();
+      setTempFolderPath(folderPath);
+    };
+    fetchTempFolder();
+  }, []);
+
+  const showTempFolderPath = () => {
+    console.log(tempFolderPath);
+  }
 
   const style = {
     newFileZone: {
@@ -33,6 +46,7 @@ export default function NewFileZone({filePaths}) {
             left='572.5px'
             cursor='pointer'
             disabled={((filePaths.SIIA.length >= 1) && (filePaths.CH.length >= 1)) ? false : true}
+            onClick={() => showTempFolderPath()}
           />
         </>
       )}

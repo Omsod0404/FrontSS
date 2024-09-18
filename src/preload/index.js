@@ -7,7 +7,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
 });
 
 // Custom APIs for renderer
-const api = {};
+const api = {
+  getTempFolder: () => ipcRenderer.invoke('get-temp-folder')
+};
 
 // Usamos `contextBridge` solo si el contexto está aislado
 if (process.contextIsolated) {
