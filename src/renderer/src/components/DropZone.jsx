@@ -8,7 +8,7 @@ import Button from "./Button";
 import Swal from 'sweetalert2';
 import styled from 'styled-components';
 
-export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
+export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
   // Nuevos estados para manejar el estado de carga del archivo
   const [fileDropped, setFileDropped] = useState(false);
   const [fileUploaded, setFileUploaded] = useState(false);
@@ -33,6 +33,17 @@ export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
     }
   }, [setFilePaths]);
 
+  // Función para manejar la selección manual de archivos desde el explorador
+  const handleFileDialog = async () => {
+    const filePaths = await window.electronAPI.openFileDialog();
+    if (filePaths.length) {
+      setFilePaths(filePaths); // Guarda los paths completos obtenidos desde el explorador
+      console.log(filePaths);   // Imprime los paths en consola
+    } else {
+      window.alert('No se seleccionó ningún archivo o el archivo no es válido.');
+    }
+  };
+
   // Nueva función para eliminar el archivo
   const removeFile = () => {
     setFilePaths([]);
@@ -42,7 +53,7 @@ export default function DropZone({ text_file, setFilePaths, filePaths = []}) {
   };
 
   // Hook para dropzone
-  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: '.xls,.xlsx',
     noClick: true, // Desactiva el click en la zona de drop
