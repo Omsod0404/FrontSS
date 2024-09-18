@@ -111,10 +111,12 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
 
   const showErrorTypeFile = () => {
     Swal.fire({
-      title: 'Error!',
-      text: 'Archivo no válido. Solo se permiten archivos .xls y .xlsx.',
       icon: 'error',
+      title: 'Error',
+      html: 'Archivo no válido. Solo se permiten archivos <b>.xls</b> y <b>.xlsx</b>.',
+      showConfirmButton: true,
       confirmButtonText: 'Ok',
+      confirmButtonColor: '#e53e3e',
       didOpen: () => {
         const popup = document.querySelector('.swal2-popup');
         if (popup) {
