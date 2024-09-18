@@ -42,6 +42,8 @@ export default function Button(props) {
       onMouseEnter={()=> setHover(true)} 
       onMouseLeave={()=> setHover(false)} 
       disabled={props.disabled}
+      onClick={props.onClick}
+      type='button'
       >
       {props.icon && <img src={props.icon} style={buttonStyle.icon} draggable='false'/>}
       <p style={buttonStyle.text}>{props.text}</p>

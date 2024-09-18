@@ -1,6 +1,9 @@
 import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'; // Añadimos ipcMain y dialog
 import * as path from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
+import fs from 'fs/promises';
+
+const tempFolder = path.join(__dirname, '../temp'); // Carpeta temporal para guardar los archivos se une la el directorio actual con la carpeta temp
 
 function createWindow() {
   // Create the browser window.
@@ -44,6 +47,9 @@ function createWindow() {
   mainWindow.webContents.openDevTools({ mode: 'detach' });
 }
 
+// Manejo de IPC para obtener la carpeta temporal
+ipcMain.handle('get-temp-folder', () => tempFolder);
+
 // Manejar el evento IPC para abrir el cuadro de diálogo de archivos
 ipcMain.handle('dialog:openFile', async () => {
   const result = await dialog.showOpenDialog({
@@ -56,7 +62,7 @@ ipcMain.handle('dialog:openFile', async () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron');
 
@@ -69,18 +75,35 @@ app.whenReady().then(() => {
 
   createWindow();
 
+  try {
+    await fs.mkdir(tempFolder, {recursive: true}); // Creamos la carpeta temporal
+    console.log('Temp folder created at:', tempFolder);
+  } catch (err) {
+    console.error('Failed to create temp folder:', err);
+  }
+
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
+
+  console.log('App is ready. Temp folder created at:', tempFolder);
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
+app.on('window-all-closed', async () => {
   if (process.platform !== 'darwin') {
+
+    try {
+      await fs.rm(tempFolder, {recursive: true}); // Eliminamos la carpeta temporal
+      console.log('Temp folder removed');
+    } catch (err) {
+      console.error('Failed to remove temp folder:', err);
+    }
+
     app.quit();
   }
 });
