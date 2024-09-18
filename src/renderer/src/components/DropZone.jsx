@@ -30,17 +30,27 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
   }, [setFilePaths]);
 
   // Función para manejar la selección manual de archivos desde el explorador
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   const handleFileDialog = async () => {
-    const filePaths = await window.electronAPI.openFileDialog();
-    if (filePaths.length) {
-      setFilePaths(filePaths); // Guarda los paths completos obtenidos desde el explorador
-      console.log(filePaths);   // Imprime los paths en consola
-      setFileUploaded(true); // Activa el estado de archivo cargado
-      setFileName(filePaths[0].split('\\').pop()); // Extrae el nombre del archivo del path
-    } else {
-      showErrorTypeFile();
+    if (dialogOpen) return; // Si el cuadro de diálogo ya está abierto, no hagas nada
+    setDialogOpen(true); // Indica que el cuadro de diálogo está abierto
+
+    try {
+      const filePaths = await window.electronAPI.openFileDialog();
+      if (filePaths.length) {
+        setFilePaths(filePaths);
+        console.log(filePaths);
+        setFileUploaded(true);
+        setFileName(filePaths[0].split('\\').pop());
+      } else {
+        questionModal(); 
+      }
+    } finally {
+      setDialogOpen(false);
     }
   };
+
 
   // Nueva función para eliminar el archivo
   const removeFile = () => {
@@ -113,10 +123,30 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      html: 'Archivo no válido. Solo se permiten archivos <b>.xls</b> y <b>.xlsx</b>.',
+      html: 'Archivo inválido. Solo se permiten archivos <b>.xls</b> y <b>.xlsx</b>.',
       showConfirmButton: true,
       confirmButtonText: 'Ok',
       confirmButtonColor: '#e53e3e',
+      timer: 1500, 
+      didOpen: () => {
+        const popup = document.querySelector('.swal2-popup');
+        if (popup) {
+          popup.style.fontFamily = 'Arial, sans-serif'; // Cambia la fuente
+          popup.style.fontSize = '14px'; // Cambia el tamaño de la fuente
+        }
+      }
+    });
+  };
+
+  const questionModal = () => {
+    Swal.fire({
+      icon: 'question',
+      title: 'Alerta',
+      html: 'No se seleccionó ningun archivo.',
+      showConfirmButton: true,
+      confirmButtonText: 'Ok',
+      confirmButtonColor: '#05549D',
+      timer: 1500, 
       didOpen: () => {
         const popup = document.querySelector('.swal2-popup');
         if (popup) {
