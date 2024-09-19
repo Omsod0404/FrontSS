@@ -2,8 +2,10 @@ import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'; // Añadi
 import * as path from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import fs from 'fs/promises';
+var child = require('child_process').execFile;
 
 const tempFolder = path.join(__dirname, '../temp'); // Carpeta temporal para guardar los archivos se une la el directorio actual con la carpeta temp
+const executablePath = path.resolve(__dirname, '../../src/renderer/src/executables/Comparacion_SIIA_CH_CLI.exe');// Ruta del ejecutable de comparación
 
 function createWindow() {
   // Create the browser window.
@@ -42,7 +44,6 @@ function createWindow() {
 
   mainWindow.removeMenu();
   mainWindow.setResizable(false);
-  mainWindow.setAlwaysOnTop(true, 'screen');
 
   mainWindow.webContents.openDevTools({ mode: 'detach' });
 }
@@ -57,6 +58,17 @@ ipcMain.handle('dialog:openFile', async () => {
     filters: [{ name: 'Excel Files', extensions: ['xls', 'xlsx'] }]
   });
   return result.filePaths; // Retorna los paths completos de los archivos seleccionados
+});
+
+// Manejar el evento IPC para ejecutar la comparación de archivos
+ipcMain.handle('execute-compare-files', async (event, file1, file2, tempFolder) => {
+  child(executablePath, [file1, file2, tempFolder], function(err, data) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(data.toString());
+  });
 });
 
 // This method will be called when Electron has finished
