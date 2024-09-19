@@ -8,7 +8,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
 // Custom APIs for renderer
 const api = {
-  getTempFolder: () => ipcRenderer.invoke('get-temp-folder')
+  getTempFolder: () => ipcRenderer.invoke('get-temp-folder'),
+   // Obtener el directorio temporal
+  executeCompareFiles: async (file1, file2, tempFolder) => {
+    await ipcRenderer.invoke('execute-compare-files', file1, file2, tempFolder);
+  },
 };
 
 // Usamos `contextBridge` solo si el contexto está aislado

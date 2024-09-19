@@ -15,10 +15,8 @@ export default function NewFileZone({ filePaths }) {
     fetchTempFolder();
   }, []);
 
-  const showTempFolderPath = () => {
-    console.log(tempFolderPath);
-  }
-  const handleCompareClick = () => {
+  const handleCompareClick = async () => {
+    await window.api.executeCompareFiles(filePaths.SIIA[0], filePaths.CH[0], tempFolderPath);
     setIsComparing(true);
     // Lógica adicional de comparación podría ir aquí
   };
