@@ -1,29 +1,66 @@
 import React, { useEffect, useState } from 'react';
 import Button from './Button.jsx'; // Asegúrate de que el botón esté correctamente importado
+import Swal from 'sweetalert2';
 
 export default function NewFileZone({ filePaths }) {
   const [isComparing, setIsComparing] = useState(false);
-
   const [isNewFileReady, setIsNewFileReady] = useState(false);
   const [tempFolderPath, setTempFolderPath] = useState('');
+  const [isErrorFromScript, setIsErrorFromScript] = useState(false);
 
   useEffect(() => {
-    const fetchTempFolder = async () => {
+    const fetchInitialData = async () => {
       const folderPath = await window.api.getTempFolder();
       setTempFolderPath(folderPath);
     };
-    fetchTempFolder();
+    fetchInitialData();
   }, []);
 
+  useEffect(() => {
+    const handleScriptError = (event) => {
+      setIsErrorFromScript(event.detail);
+    };
+    window.addEventListener('error-script', handleScriptError);
+    return () => {
+      window.removeEventListener('error-script', handleScriptError);
+    };
+  });
+
+  useEffect(() => {
+    if (isErrorFromScript) {
+      showErrorScript();
+    }
+  }, [isErrorFromScript]); // Se ejecuta cada vez que cambia isErrorFromScript
+
   const handleCompareClick = async () => {
-    await window.api.executeCompareFiles(filePaths.SIIA[0], filePaths.CH[0], tempFolderPath);
     setIsComparing(true);
-    // Lógica adicional de comparación podría ir aquí
+    await window.api.executeCompareFiles(filePaths.SIIA[0], filePaths.CH[0], tempFolderPath);
   };
 
   const handleCancelClick = () => {
     setIsComparing(false);
     // Lógica para detener el proceso de comparación
+  };
+
+  const showErrorScript = () => {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      html: 'Error while comparing files, please try again. Take on mind the order of files',
+      showConfirmButton: true,
+      confirmButtonText: 'Ok',
+      confirmButtonColor: '#e53e3e',
+      didOpen: () => {
+        const popup = document.querySelector('.swal2-popup');
+        if (popup) {
+          popup.style.fontFamily = 'Arial, sans-serif';
+          popup.style.fontSize = '14px';
+        }
+      }
+    }).then(() => {
+      setIsErrorFromScript(false); // Restablecer el estado tras el cierre del modal
+      setIsComparing(false);
+    });
   };
 
   const style = {
