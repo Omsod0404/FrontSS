@@ -2,11 +2,11 @@ import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'; // Añadi
 import * as path from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import fs from 'fs/promises';
-var child = require('child_process').execFile;
-var exec = require('child_process').exec;
+import { exec, execFile } from 'child_process';
 
 const tempFolder = path.join(__dirname, '../temp'); // Carpeta temporal para guardar los archivos se une la el directorio actual con la carpeta temp
 const executablePath = path.resolve(__dirname, '../../src/renderer/src/executables/Comparacion_SIIA_CH_CLI.exe');// Ruta del ejecutable de comparación
+let errorScript = false;
 
 //funcion para crear el folder temporal
 async function createTempFolder(tempFolder) {
@@ -98,8 +98,12 @@ ipcMain.handle('dialog:openFile', async () => {
 
 // Manejar el evento IPC para ejecutar la comparación de archivos
 ipcMain.handle('execute-compare-files', async (event, file1, file2, tempFolder) => {
-  child(executablePath, [file1, file2, tempFolder], function(err, data) {
+  errorScript = false;
+
+  execFile(executablePath, [file1, file2, tempFolder], function(err, data) {
     if (err) {
+      errorScript = true;
+      event.sender.send('error-script', errorScript);
       console.error(err);
       return;
     }
@@ -122,7 +126,6 @@ app.whenReady().then(async () => {
   });
 
   createWindow();
-
   createTempFolder(tempFolder);
 
   app.on('activate', function () {

@@ -8,10 +8,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
 // Custom APIs for renderer
 const api = {
-  getTempFolder: () => ipcRenderer.invoke('get-temp-folder'),
-   // Obtener el directorio temporal
-  executeCompareFiles: async (file1, file2, tempFolder) => {
-    await ipcRenderer.invoke('execute-compare-files', file1, file2, tempFolder);
+  getTempFolder: () => ipcRenderer.invoke('get-temp-folder'), // Obtener el directorio temporal
+  executeCompareFiles: (file1, file2, tempFolder) => {
+    ipcRenderer.invoke('execute-compare-files', file1, file2, tempFolder);
   },
 };
 
@@ -27,3 +26,7 @@ if (process.contextIsolated) {
   window.electron = electronAPI;
   window.api = api;
 }
+
+ipcRenderer.on('error-script', (_, error) => {
+  window.dispatchEvent(new CustomEvent('error-script', { detail: error }));
+});
