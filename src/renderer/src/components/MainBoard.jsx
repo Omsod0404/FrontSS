@@ -13,7 +13,6 @@ export default function MainBoard() {
       height: '400px',
       width: '740px',
       borderRadius: '8px',
-      boxShadow: '#aaa 0px 0px 10px',
       display: 'flex',
       flexDirection: 'column',
     },

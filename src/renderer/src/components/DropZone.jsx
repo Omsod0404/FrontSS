@@ -81,7 +81,9 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
       textAlign: 'center',
       justifyContent: 'center',
       alignItems: 'center',
-      flexDirection: 'column'
+      flexDirection: 'column',
+      backgroundColor: isDragActive ? '#f3f5f7' : '',
+      transition: 'background-color 0.3s',
     },
     dropText: {
       color: "black",
