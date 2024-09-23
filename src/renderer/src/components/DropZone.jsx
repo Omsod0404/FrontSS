@@ -44,11 +44,13 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
         setFileUploaded(true);
         setFileName(filePaths[0].split('\\').pop());
       } else {
+        questionModal(); 
       }
     } finally {
       setDialogOpen(false);
     }
   };
+
 
   // Nueva función para eliminar el archivo
   const removeFile = () => {
@@ -79,7 +81,9 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
       textAlign: 'center',
       justifyContent: 'center',
       alignItems: 'center',
-      flexDirection: 'column'
+      flexDirection: 'column',
+      backgroundColor: isDragActive ? '#f3f5f7' : '',
+      transition: 'background-color 0.3s',
     },
     dropText: {
       color: "black",
