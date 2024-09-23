@@ -2,14 +2,52 @@ import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'; // Añadi
 import * as path from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import fs from 'fs/promises';
+import { exec, execFile } from 'child_process';
 
 const tempFolder = path.join(__dirname, '../temp'); // Carpeta temporal para guardar los archivos se une la el directorio actual con la carpeta temp
+const executablePath = path.resolve(__dirname, '../../src/renderer/src/executables/Comparacion_SIIA_CH_CLI.exe');// Ruta del ejecutable de comparación
+let errorScript = false;
+
+//funcion para crear el folder temporal
+async function createTempFolder(tempFolder) {
+  try {
+    const folderExists = await fs.access(tempFolder).then(() => true).catch(() => false);
+
+    if(folderExists){
+      console.log('Temp folder already exists, deleting contents...');
+      await clearFolder(tempFolder);
+    }
+
+    await fs.mkdir(tempFolder, {recursive: true});
+    console.log('Temp folder created at:', tempFolder);
+
+    exec('attrib +h ' + tempFolder, function(err, stdout, stderr) {
+      if (err) {
+        console.error('Failed to hide temp folder:', err);
+      } else {
+        console.log('Temp folder hidden');
+      }
+    });
+  } catch (error) {
+    console.error('Failed to create temp folder:', error);
+  }
+}
+
+//funcion para eliminar el folder temporal
+async function clearFolder(tempFolder) {
+  try {
+    await fs.rm(tempFolder, {recursive: true}); // Eliminamos la carpeta temporal
+    console.log('Temp folder removed');
+  } catch (err) {
+    console.error('Failed to remove temp folder:', err);
+  }
+}
 
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 580,
+    width: 740,
+    height: 510,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux'
@@ -59,6 +97,21 @@ ipcMain.handle('dialog:openFile', async () => {
   return result.filePaths; // Retorna los paths completos de los archivos seleccionados
 });
 
+// Manejar el evento IPC para ejecutar la comparación de archivos
+ipcMain.handle('execute-compare-files', async (event, file1, file2, tempFolder) => {
+  errorScript = false;
+
+  execFile(executablePath, [file1, file2, tempFolder], function(err, data) {
+    if (err) {
+      errorScript = true;
+      event.sender.send('error-script', errorScript);
+      console.error(err);
+      return;
+    }
+    console.log(data.toString());
+  });
+});
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -74,13 +127,7 @@ app.whenReady().then(async () => {
   });
 
   createWindow();
-
-  try {
-    await fs.mkdir(tempFolder, {recursive: true}); // Creamos la carpeta temporal
-    console.log('Temp folder created at:', tempFolder);
-  } catch (err) {
-    console.error('Failed to create temp folder:', err);
-  }
+  createTempFolder(tempFolder);
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
@@ -97,13 +144,7 @@ app.whenReady().then(async () => {
 app.on('window-all-closed', async () => {
   if (process.platform !== 'darwin') {
 
-    try {
-      await fs.rm(tempFolder, {recursive: true}); // Eliminamos la carpeta temporal
-      console.log('Temp folder removed');
-    } catch (err) {
-      console.error('Failed to remove temp folder:', err);
-    }
-
+    await clearFolder(tempFolder);
     app.quit();
   }
 });
