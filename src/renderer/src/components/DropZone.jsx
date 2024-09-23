@@ -44,13 +44,11 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
         setFileUploaded(true);
         setFileName(filePaths[0].split('\\').pop());
       } else {
-        questionModal(); 
       }
     } finally {
       setDialogOpen(false);
     }
   };
-
 
   // Nueva función para eliminar el archivo
   const removeFile = () => {
