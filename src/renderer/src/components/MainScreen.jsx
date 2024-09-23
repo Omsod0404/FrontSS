@@ -25,22 +25,20 @@ const mainScreenStyle = {
     height: '100vh',
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: '#F6F7F8',
+    backgroundColor: 'white',
     userSelect: 'none',
   },
   logosContainer: {
-    height: '100px',
+    height: '80px',
     width: '100%',
     display: 'flex',
     alignItems: 'end',
     justifyContent: 'space-between',
-    
   },
   logos: {
     height: '60px',
     marginLeft: '20px',
     marginRight: '20px',
-    marginBottom: '20px',
     
   },
   contentContainer: {
@@ -48,6 +46,5 @@ const mainScreenStyle = {
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
-    
   }
 }

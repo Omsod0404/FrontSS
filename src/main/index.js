@@ -46,8 +46,8 @@ async function clearFolder(tempFolder) {
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 580,
+    width: 740,
+    height: 510,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux'
@@ -80,6 +80,7 @@ function createWindow() {
 
   mainWindow.removeMenu();
   mainWindow.setResizable(false);
+  mainWindow.setAlwaysOnTop(true, 'screen');
 
   mainWindow.webContents.openDevTools({ mode: 'detach' });
 }
