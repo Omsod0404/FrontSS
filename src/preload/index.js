@@ -12,6 +12,11 @@ const api = {
   executeCompareFiles: (file1, file2, tempFolder) => {
     ipcRenderer.invoke('execute-compare-files', file1, file2, tempFolder);
   },
+  saveComparisonFile: (comparisonFilePath) => {
+    ipcRenderer.invoke('save-comparison-file', comparisonFilePath);
+  },
+  clearTempFolderAndRestart: () => ipcRenderer.invoke('clear-temp-folder-and-restart'),
+  clearLoadedFiles: () => ipcRenderer.invoke('clear-loaded-files'), // Nueva función
 };
 
 // Usamos `contextBridge` solo si el contexto está aislado
@@ -29,4 +34,8 @@ if (process.contextIsolated) {
 
 ipcRenderer.on('error-script', (_, error) => {
   window.dispatchEvent(new CustomEvent('error-script', { detail: error }));
+});
+
+ipcRenderer.on('comparison-file-created', (_, filePath) => {
+  window.dispatchEvent(new CustomEvent('comparison-file-created', { detail: filePath }));
 });

@@ -44,13 +44,11 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
         setFileUploaded(true);
         setFileName(filePaths[0].split('\\').pop());
       } else {
-        questionModal(); 
       }
     } finally {
       setDialogOpen(false);
     }
   };
-
 
   // Nueva función para eliminar el archivo
   const removeFile = () => {
@@ -129,7 +127,6 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
       showConfirmButton: true,
       confirmButtonText: 'Ok',
       confirmButtonColor: '#e53e3e',
-      timer: 1500, 
       didOpen: () => {
         const popup = document.querySelector('.swal2-popup');
         if (popup) {
@@ -148,7 +145,6 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
       showConfirmButton: true,
       confirmButtonText: 'Ok',
       confirmButtonColor: '#05549D',
-      timer: 1500, 
       didOpen: () => {
         const popup = document.querySelector('.swal2-popup');
         if (popup) {
@@ -161,15 +157,17 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
 
   return (
     <div style={dropZoneStyle.dropZoneContainer} {...getRootProps()}>
-      <Button
-        icon={Papelera}
-        iconSize="25px"
-        position="absolute"
-        cursor="pointer"
-        top="5px"
-        left="90%"
-        onClick={removeFile} // Agregado el evento onClick para eliminar el archivo
-      />
+      {fileUploaded && (
+        <Button
+          icon={Papelera}
+          iconSize="25px"
+          position="absolute"
+          cursor="pointer"
+          top="5px"
+          left="90%"
+          onClick={removeFile} // Agregado el evento onClick para eliminar el archivo
+        />
+      )}
 
       <input {...getInputProps()} />
 
@@ -185,10 +183,10 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
             </>
           ) : (
             <>
-              <span style={dropZoneStyle.fileSourceText}>{text_file}</span> 
+              <span style={dropZoneStyle.fileSourceText}>{text_file}</span>
               <img src={CargaArchivos} style={dropZoneStyle.iconSubida} alt="Upload" draggable='false'/>
               <p style={dropZoneStyle.dropText}>
-                Drag and Drop File or 
+                Drag and Drop File or
                 <span style={dropZoneStyle.textChoose} onClick={handleFileDialog}>Choose File</span>
               </p>
             </>

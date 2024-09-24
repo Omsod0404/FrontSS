@@ -85,7 +85,6 @@ function createWindow() {
   mainWindow.webContents.openDevTools({ mode: 'detach' });
 }
 
-// Manejo de IPC para obtener la carpeta temporal
 ipcMain.handle('get-temp-folder', () => tempFolder);
 
 // Manejar el evento IPC para abrir el cuadro de diálogo de archivos
@@ -109,12 +108,56 @@ ipcMain.handle('execute-compare-files', async (event, file1, file2, tempFolder) 
       return;
     }
     console.log(data.toString());
+
+    const comparisonFilePath = path.join(tempFolder, 'comparison.xlsx');
+    fs.access(comparisonFilePath)
+      .then(() => {
+        event.sender.send('comparison-file-created', comparisonFilePath);
+      })
+      .catch((err) => {
+        console.error('Comparison file not found:', err);
+      });
   });
 });
-
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
+
+ipcMain.handle('save-comparison-file', async (event, comparisonFilePath) => {
+  const result = await dialog.showSaveDialog({
+    title: 'Save Comparison File',
+    defaultPath: 'comparison.xlsx',
+    filters: [{ name: 'Excel Files', extensions: ['xlsx'] }]
+  });
+  if (!result.canceled && result.filePath) {
+    try {
+      await fs.copyFile(comparisonFilePath, result.filePath);
+      console.log('File saved to:', result.filePath);
+    } catch (error) {
+      console.error('Failed to save file:', error);
+    }
+  }
+});
+
+// Manejar el evento IPC para limpiar el folder temporal y reiniciar la aplicación
+ipcMain.handle('clear-temp-folder-and-restart', async () => {
+  await clearFolder(tempFolder);
+  await createTempFolder(tempFolder); // Recreate the temp folder
+  app.relaunch();
+});
+
+// Manejar el evento IPC para limpiar los archivos cargados
+ipcMain.handle('clear-loaded-files', async () => {
+  try {
+    const files = await fs.readdir(tempFolder);
+    for (const file of files) {
+      await fs.unlink(path.join(tempFolder, file));
+    }
+    console.log('All loaded files have been cleared.');
+  } catch (err) {
+    console.error('Failed to clear loaded files:', err);
+  }
+});
 app.whenReady().then(async () => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron');
