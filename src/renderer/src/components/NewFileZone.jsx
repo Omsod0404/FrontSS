@@ -58,6 +58,13 @@ export default function NewFileZone({ filePaths }) {
     await window.api.saveComparisonFile(comparisonFilePath);
   };
 
+  const handleClearClick = async () => {
+    await window.api.clearLoadedFiles();
+    setIsComparing(false);
+    setIsNewFileReady(false);
+    setComparisonFilePath('');
+  };
+
   const showErrorScript = () => {
     Swal.fire({
       icon: 'error',
@@ -122,6 +129,18 @@ export default function NewFileZone({ filePaths }) {
       color: 'white',
       position: 'absolute',
       top: '7.5px',
+      left: '572.5px',
+      cursor: 'pointer',
+      fontWeight: 'bold',
+    },
+    clearButton: {
+      height: '35px',
+      width: '90px',
+      backgroundColor: 'red',
+      borderRadius: '5px',
+      color: 'white',
+      position: 'absolute',
+      top: '50px',
       left: '572.5px',
       cursor: 'pointer',
       fontWeight: 'bold',
@@ -203,6 +222,9 @@ export default function NewFileZone({ filePaths }) {
           </div>
           <button style={style.downloadButton} onClick={handleDownloadClick}>
             Download
+          </button>
+          <button style={style.clearButton} onClick={handleClearClick}>
+            Clear
           </button>
         </>
       )}
