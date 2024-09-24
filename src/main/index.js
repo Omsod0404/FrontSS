@@ -139,6 +139,25 @@ ipcMain.handle('save-comparison-file', async (event, comparisonFilePath) => {
   }
 });
 
+// Manejar el evento IPC para limpiar el folder temporal y reiniciar la aplicación
+ipcMain.handle('clear-temp-folder-and-restart', async () => {
+  await clearFolder(tempFolder);
+  await createTempFolder(tempFolder); // Recreate the temp folder
+  app.relaunch();
+});
+
+// Manejar el evento IPC para limpiar los archivos cargados
+ipcMain.handle('clear-loaded-files', async () => {
+  try {
+    const files = await fs.readdir(tempFolder);
+    for (const file of files) {
+      await fs.unlink(path.join(tempFolder, file));
+    }
+    console.log('All loaded files have been cleared.');
+  } catch (err) {
+    console.error('Failed to clear loaded files:', err);
+  }
+});
 app.whenReady().then(async () => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron');

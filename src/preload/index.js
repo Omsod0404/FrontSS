@@ -14,7 +14,9 @@ const api = {
   },
   saveComparisonFile: (comparisonFilePath) => {
     ipcRenderer.invoke('save-comparison-file', comparisonFilePath);
-  }
+  },
+  clearTempFolderAndRestart: () => ipcRenderer.invoke('clear-temp-folder-and-restart'),
+  clearLoadedFiles: () => ipcRenderer.invoke('clear-loaded-files'), // Nueva función
 };
 
 // Usamos `contextBridge` solo si el contexto está aislado
