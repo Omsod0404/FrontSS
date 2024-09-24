@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Button from './Button.jsx'; // Asegúrate de que el botón esté correctamente importado
 import Swal from 'sweetalert2';
+import DroppedFileIcon from '../resources/dropped_file_icon.png'; // Asegúrate de tener el ícono en la ruta correcta
 
 export default function NewFileZone({ filePaths }) {
   const [isComparing, setIsComparing] = useState(false);
   const [isNewFileReady, setIsNewFileReady] = useState(false);
   const [tempFolderPath, setTempFolderPath] = useState('');
   const [isErrorFromScript, setIsErrorFromScript] = useState(false);
+  const [comparisonFilePath, setComparisonFilePath] = useState('');
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -21,8 +23,17 @@ export default function NewFileZone({ filePaths }) {
       setIsErrorFromScript(event.detail);
     };
     window.addEventListener('error-script', handleScriptError);
+
+    const handleComparisonFileCreated = (event) => {
+      setComparisonFilePath(event.detail);
+      setIsComparing(false);
+      setIsNewFileReady(true);
+    };
+    window.addEventListener('comparison-file-created', handleComparisonFileCreated);
+
     return () => {
       window.removeEventListener('error-script', handleScriptError);
+      window.removeEventListener('comparison-file-created', handleComparisonFileCreated);
     };
   });
 
@@ -40,6 +51,11 @@ export default function NewFileZone({ filePaths }) {
   const handleCancelClick = () => {
     setIsComparing(false);
     // Lógica para detener el proceso de comparación
+  };
+
+  const handleDownloadClick = async (event) => {
+    event.preventDefault();
+    await window.api.saveComparisonFile(comparisonFilePath);
   };
 
   const showErrorScript = () => {
@@ -71,15 +87,17 @@ export default function NewFileZone({ filePaths }) {
       display: 'flex',
       alignItems: 'center',
       position: 'relative',
-      backgroundColor: isComparing ? '#f3f5f7' : '',
+      backgroundColor: isComparing || isNewFileReady ? '#f3f5f7' : '',
     },
     comparingText: {
-      marginLeft: '20px',
+      marginLeft: '5px',
       fontSize: '12px',
       fontWeight: 'bold',
       color: 'black',
       marginRight: '8px',
       fontFamily: 'Arial, sans-serif',
+      display: 'flex',
+      alignItems: 'center',
     },
     spinner: {
       border: '2px solid black',
@@ -95,33 +113,64 @@ export default function NewFileZone({ filePaths }) {
     },
     button: {
       marginLeft: '10px',
+    },
+    downloadButton: {
+      height: '35px',
+      width: '90px',
+      backgroundColor: 'green',
+      borderRadius: '5px',
+      color: 'white',
+      position: 'absolute',
+      top: '7.5px',
+      left: '572.5px',
+      cursor: 'pointer',
+      fontWeight: 'bold',
+    },
+    fileInfo: {
+      display: 'flex',
+      flexDirection: 'column',
+      marginLeft: '10px',
+      fontFamily: 'Arial, sans-serif',
+    },
+    fileName: {
+      fontSize: '12px',
+      fontWeight: 'bold',
+    },
+    fileSize: {
+      fontSize: '10px',
+    },
+    iconContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      marginLeft: '20px',
     }
   };
 
   return (
     <div style={style.newFileZone}>
-      {!isComparing && (
-        <>
-          <Button
-            height='35px'
-            width='100px'
-            text='Compare'
-            backgroundColor={((filePaths.SIIA.length >= 1) && (filePaths.CH.length >= 1)) ? '#05549D' : '#aaa'}
-            borderRadius='10px'
-            textColor='white'
-            position='absolute'
-            top='7.5px'
-            left='572.5px'
-            cursor='pointer'
-            disabled={((filePaths.SIIA.length >= 1) && (filePaths.CH.length >= 1)) ? false : true}
-            onClick={handleCompareClick}
-          />
-        </>
+      {!isComparing && !isNewFileReady && (
+        <Button
+          height='35px'
+          width='100px'
+          text='Compare'
+          backgroundColor={((filePaths.SIIA.length >= 1) && (filePaths.CH.length >= 1)) ? '#05549D' : '#aaa'}
+          borderRadius='10px'
+          textColor='white'
+          position='absolute'
+          top='7.5px'
+          left='572.5px'
+          cursor='pointer'
+          disabled={((filePaths.SIIA.length >= 1) && (filePaths.CH.length >= 1)) ? false : true}
+          onClick={handleCompareClick}
+        />
       )}
 
       {isComparing && (
         <>
-          <p style={style.comparingText}>Comparing</p>
+          <div style={style.iconContainer}>
+            <img src={DroppedFileIcon} alt="Dropped File Icon" style={{ width: '16px', height: '16px', marginRight: '5px' }} />
+            <p style={style.comparingText}>Comparing</p>
+          </div>
           <div style={style.spinner}></div>
           <Button
             height='35px'
@@ -129,17 +178,32 @@ export default function NewFileZone({ filePaths }) {
             text='Cancel'
             backgroundColor='white'
             borderRadius='5px'
-            border = '1px solid #E3E3E3'
+            border= '1px solid #E3E3E3'
             textColor='black'
-            fontSize = '13px'
+            fontSize='13px'
             position='absolute'
             top='7.5px'
             left='572.5px'
             cursor='pointer'
-            fontWeight = 'bold'
+            fontWeight='bold'
             onClick={handleCancelClick}
             style={style.button}
           />
+        </>
+      )}
+
+      {!isComparing && isNewFileReady && (
+        <>
+          <div style={style.iconContainer}>
+            <img src={DroppedFileIcon} alt="Dropped File Icon" style={{ width: '16px', height: '16px', marginRight: '5px' }} />
+            <div style={style.fileInfo}>
+              <span style={style.fileName}>comparing.xls</span>
+              <span style={style.fileSize}>15 KB</span>
+            </div>
+          </div>
+          <button style={style.downloadButton} onClick={handleDownloadClick}>
+            Download
+          </button>
         </>
       )}
     </div>
