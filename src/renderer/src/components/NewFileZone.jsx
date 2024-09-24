@@ -31,11 +31,17 @@ export default function NewFileZone({ filePaths }) {
     };
     window.addEventListener('comparison-file-created', handleComparisonFileCreated);
 
+    const handleComparisonCancelled = () => {
+      setIsComparing(false);
+    };
+    window.addEventListener('comparison-cancelled', handleComparisonCancelled);
+
     return () => {
       window.removeEventListener('error-script', handleScriptError);
       window.removeEventListener('comparison-file-created', handleComparisonFileCreated);
+      window.removeEventListener('comparison-cancelled', handleComparisonCancelled);
     };
-  });
+  }, []);
 
   useEffect(() => {
     if (isErrorFromScript) {
@@ -48,9 +54,9 @@ export default function NewFileZone({ filePaths }) {
     await window.api.executeCompareFiles(filePaths.SIIA[0], filePaths.CH[0], tempFolderPath);
   };
 
-  const handleCancelClick = () => {
+  const handleCancelClick = async () => {
+    await window.api.cancelComparison();
     setIsComparing(false);
-    // Lógica para detener el proceso de comparación
   };
 
   const handleDownloadClick = async (event) => {
