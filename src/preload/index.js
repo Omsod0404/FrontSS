@@ -22,9 +22,6 @@ const api = {
     return ipcRenderer.invoke('save-comparison-file', comparisonFilePath);
   },
 
-  // Limpiar la carpeta temporal y reinicia la app
-  clearTempFolderAndRestart: () => ipcRenderer.invoke('clear-temp-folder-and-restart'),
-
   //Limpiar archivos cargados
   clearLoadedFiles: () => ipcRenderer.invoke('clear-loaded-files'),
 

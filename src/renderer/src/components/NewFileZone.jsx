@@ -70,6 +70,7 @@ export default function NewFileZone({ filePaths }) {
     setIsComparing(false);
     setIsNewFileReady(false);
     setComparisonFilePath('');
+    window.location.reload();
   };
 
   const showErrorScript = () => {
@@ -127,32 +128,6 @@ export default function NewFileZone({ filePaths }) {
     // },
     button: {
       marginLeft: '10px',
-    },
-    downloadButton: {
-      height: '35px',
-      width: '90px',
-      backgroundColor: 'green',
-      borderRadius: '5px',
-      color: 'white',
-      position: 'absolute',
-      top: '7.5px',
-      left: '572.5px',
-      cursor: 'pointer',
-      fontWeight: 'bold',
-    },
-    clearButton: {
-      height: '32px',
-      width: '130px',
-      backgroundColor: '#ba3c3c',
-      borderRadius: '5px',
-      color: 'white',
-      position: 'absolute',
-      top: '62px',
-      left: '533px',
-      cursor: 'pointer',
-      fontWeight: 'bold',
-      border: 'none',
-      outline: 'none',
     },
     fileInfo: {
       display: 'flex',
@@ -243,12 +218,42 @@ export default function NewFileZone({ filePaths }) {
               <span style={style.fileSize}>15 KB</span>
             </div>
           </div>
-          <button style={style.downloadButton} onClick={handleDownloadClick}>
-            Download
-          </button>
-          <button style={style.clearButton} onClick={handleClearClick}>
-            Clear
-          </button>
+          <Button
+            height='35px'
+            width='90px'
+            text='Download'
+            backgroundColor='green'
+            backgroundColorOnHover='#28a745'
+            backgroundColorOnClic='#218838'
+            borderRadius='5px'
+            textColor='white'
+            position='absolute'
+            top='7.5px'
+            left='572.5px'
+            cursor='pointer'
+            fontWeight='bold'
+            onClick={handleDownloadClick}
+            style={style.button}
+          />
+          <Button
+            height='32px'
+            width='130px'
+            text='Clear'
+            backgroundColor='#ba3c3c'
+            backgroundColorOnHover='#ef5350'
+            backgroundColorOnClic='#bd2130'
+            borderRadius='5px'
+            textColor='white'
+            position='absolute'
+            top='62px'
+            left='533px'
+            cursor='pointer'
+            fontWeight='bold'
+            border='none'
+            outline='none'
+            onClick={handleClearClick}
+            style={style.button}
+          />
         </>
       )}
     </div>
