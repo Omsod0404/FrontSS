@@ -158,13 +158,6 @@ ipcMain.handle('save-comparison-file', async (event, comparisonFilePath) => {
   }
 });
 
-// Manejar el evento IPC para limpiar el folder temporal y reiniciar la aplicación
-ipcMain.handle('clear-temp-folder-and-restart', async () => {
-  await clearFolder(tempFolder);
-  await createTempFolder(tempFolder); // Recreate the temp folder
-  app.relaunch();
-});
-
 // Manejar el evento IPC para limpiar los archivos cargados
 ipcMain.handle('clear-loaded-files', async () => {
   try {
