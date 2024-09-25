@@ -178,8 +178,10 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
           {/* Mostrar el nombre del archivo y el ícono correspondiente */}
           {fileUploaded ? (
             <>
+              <p style={dropZoneStyle.dropText}>{text_file}</p>
               <img src={DroppedFile} style={dropZoneStyle.iconSubida} alt="Archivo Cargado" draggable='false'/>
               <p style={dropZoneStyle.dropText}>{fileName}</p>
+
             </>
           ) : (
             <>
