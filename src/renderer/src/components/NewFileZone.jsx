@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Button from './Button.jsx'; // Asegúrate de que el botón esté correctamente importado
 import Swal from 'sweetalert2';
 import DroppedFileIcon from '../resources/dropped_file_icon.png'; // Asegúrate de tener el ícono en la ruta correcta
+import { Oval } from 'react-loader-spinner';
 
 export default function NewFileZone({ filePaths }) {
   const [isComparing, setIsComparing] = useState(false);
@@ -112,18 +113,18 @@ export default function NewFileZone({ filePaths }) {
       display: 'flex',
       alignItems: 'center',
     },
-    spinner: {
-      border: '2px solid black',
-      borderTop: '2px solid white',
-      borderRadius: '50%',
-      width: '13px',
-      height: '13px',
-      animation: 'spin 2s linear infinite',
-    },
-    '@keyframes spin': {
-      '0%': { transform: 'rotate(0deg)' },
-      '100%': { transform: 'rotate(360deg)' }
-    },
+    // spinner: {
+    //   border: '2px solid black',
+    //   borderTop: '2px solid white',
+    //   borderRadius: '50%',
+    //   width: '13px',
+    //   height: '13px',
+    //   animation: 'spin 2s linear infinite',
+    // },
+    // '@keyframes spin': {
+    //   '0%': { transform: 'rotate(0deg)' },
+    //   '100%': { transform: 'rotate(360deg)' }
+    // },
     button: {
       marginLeft: '10px',
     },
@@ -198,7 +199,18 @@ export default function NewFileZone({ filePaths }) {
             <img src={DroppedFileIcon} alt="Dropped File Icon" style={{ width: '16px', height: '16px', marginRight: '5px' }} />
             <p style={style.comparingText}>Comparing</p>
           </div>
-          <div style={style.spinner}></div>
+          <div>
+          <Oval
+            visible={true}
+            height={15}
+            width={15}
+            color="#000000"
+            ariaLabel="oval-loading"
+            secondaryColor="#ddd"
+            strokeWidth={3}
+            strokeWidthSecondary={3}
+          />
+          </div>
           <Button
             height='35px'
             width='90px'
