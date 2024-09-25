@@ -38,5 +38,30 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "vite": "^3.1.8"
+  },
+  "build": {
+    "files": [
+      "out/**/*",
+      "src/renderer/src/executables/*"
+    ],
+    "extraResources": [
+      {
+        "from": "src/renderer/src/executables/",
+        "to": "executables/",
+        "filter": ["**/*"]
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "build/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "build/icon.png"
+    }
   }
 }

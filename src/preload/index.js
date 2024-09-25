@@ -12,6 +12,9 @@ const api = {
   //Obtener el directorio temporal
   getTempFolder: () => ipcRenderer.invoke('get-temp-folder'),
 
+  //Obtener el ejecutable
+  getExecutablePath: () => ipcRenderer.invoke('get-executable-path'),
+
   //Ejecutar el script de comparación
   executeCompareFiles: (file1, file2, tempFolder) => {
     return ipcRenderer.invoke('execute-compare-files', file1, file2, tempFolder);

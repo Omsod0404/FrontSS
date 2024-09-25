@@ -4,8 +4,11 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import fs from 'fs/promises';
 import { exec, execFile } from 'child_process';
 
-const tempFolder = path.join(__dirname, '../temp'); // Carpeta temporal para guardar los archivos se une la el directorio actual con la carpeta temp
-const executablePath = path.resolve(__dirname, '../../src/renderer/src/executables/Comparacion_SIIA_CH_Lite.exe');// Ruta del ejecutable de comparación
+const tempFolder = path.join(app.getPath('temp'), 'temp-folder'); // Carpeta temporal para guardar los archivos se une la el directorio actual con la carpeta temp
+const isPackaged = app.isPackaged;
+const executablePath = isPackaged
+  ? path.join(process.resourcesPath, 'executables', 'Comparacion_SIIA_CH_Lite.exe')
+  : path.resolve(__dirname, '../../src/renderer/src/executables/Comparacion_SIIA_CH_Lite.exe');
 let errorScript = false;
 let comparisonProcess = null;
 
@@ -87,6 +90,9 @@ function createWindow() {
 
 //Obtener la carpeta temporal
 ipcMain.handle('get-temp-folder', () => tempFolder);
+
+//Obtener la ruta del ejecutable
+ipcMain.handle('get-executable-path', () => executablePath);
 
 // Manejar el evento IPC para abrir el cuadro de diálogo de archivos
 ipcMain.handle('dialog:openFile', async () => {

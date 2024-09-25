@@ -10,11 +10,16 @@ export default function NewFileZone({ filePaths }) {
   const [tempFolderPath, setTempFolderPath] = useState('');
   const [isErrorFromScript, setIsErrorFromScript] = useState(false);
   const [comparisonFilePath, setComparisonFilePath] = useState('');
+  const [executablePath, setExecutablePath] = useState('');
 
   useEffect(() => {
     const fetchInitialData = async () => {
+      const executablePath = await window.api.getExecutablePath();
       const folderPath = await window.api.getTempFolder();
       setTempFolderPath(folderPath);
+      setExecutablePath(executablePath);
+      console.log('Temp folder path:', folderPath);
+      console.log('Executable path:', executablePath);
     };
     fetchInitialData();
   }, []);
