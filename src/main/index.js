@@ -5,7 +5,7 @@ import fs from 'fs/promises';
 import { exec, execFile } from 'child_process';
 
 const tempFolder = path.join(__dirname, '../temp'); // Carpeta temporal para guardar los archivos se une la el directorio actual con la carpeta temp
-const executablePath = path.resolve(__dirname, '../../src/renderer/src/executables/Comparacion_SIIA_CH_CLI.exe');// Ruta del ejecutable de comparación
+const executablePath = path.resolve(__dirname, '../../src/renderer/src/executables/Comparacion_SIIA_CH_Lite.exe');// Ruta del ejecutable de comparación
 let errorScript = false;
 let comparisonProcess = null;
 

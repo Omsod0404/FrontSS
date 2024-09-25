@@ -181,6 +181,8 @@ export default function NewFileZone({ filePaths }) {
           width='100px'
           text='Compare'
           backgroundColor={((filePaths.SIIA.length >= 1) && (filePaths.CH.length >= 1)) ? '#05549D' : '#aaa'}
+          backgroundColorOnHover = '#2C6FAC'
+          backgroundColorOnClic = '#598DBE'
           borderRadius='10px'
           textColor='white'
           position='absolute'
@@ -189,6 +191,7 @@ export default function NewFileZone({ filePaths }) {
           cursor='pointer'
           disabled={((filePaths.SIIA.length >= 1) && (filePaths.CH.length >= 1)) ? false : true}
           onClick={handleCompareClick}
+          fontSize='14px'
         />
       )}
 
