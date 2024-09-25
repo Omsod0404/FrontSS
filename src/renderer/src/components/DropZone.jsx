@@ -44,7 +44,6 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
         setFileUploaded(true);
         setFileName(filePaths[0].split('\\').pop());
       } else {
-        questionModal();
       }
     } finally {
       setDialogOpen(false);
@@ -128,7 +127,6 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
       showConfirmButton: true,
       confirmButtonText: 'Ok',
       confirmButtonColor: '#e53e3e',
-      timer: 1500,
       didOpen: () => {
         const popup = document.querySelector('.swal2-popup');
         if (popup) {
@@ -147,7 +145,6 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
       showConfirmButton: true,
       confirmButtonText: 'Ok',
       confirmButtonColor: '#05549D',
-      timer: 1500,
       didOpen: () => {
         const popup = document.querySelector('.swal2-popup');
         if (popup) {
@@ -181,8 +178,10 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
           {/* Mostrar el nombre del archivo y el ícono correspondiente */}
           {fileUploaded ? (
             <>
+              <p style={dropZoneStyle.dropText}>{text_file}</p>
               <img src={DroppedFile} style={dropZoneStyle.iconSubida} alt="Archivo Cargado" draggable='false'/>
               <p style={dropZoneStyle.dropText}>{fileName}</p>
+
             </>
           ) : (
             <>
