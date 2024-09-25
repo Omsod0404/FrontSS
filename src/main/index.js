@@ -5,8 +5,9 @@ import fs from 'fs/promises';
 import { exec, execFile } from 'child_process';
 
 const tempFolder = path.join(__dirname, '../temp'); // Carpeta temporal para guardar los archivos se une la el directorio actual con la carpeta temp
-const executablePath = path.resolve(__dirname, '../../src/renderer/src/executables/Comparacion_SIIA_CH_CLI.exe');// Ruta del ejecutable de comparación
+const executablePath = path.resolve(__dirname, '../../src/renderer/src/executables/Comparacion_SIIA_CH_Lite.exe');// Ruta del ejecutable de comparación
 let errorScript = false;
+let comparisonProcess = null;
 
 //funcion para crear el folder temporal
 async function createTempFolder(tempFolder) {
@@ -43,8 +44,8 @@ async function clearFolder(tempFolder) {
   }
 }
 
+//funcion para crear la ventana
 function createWindow() {
-  // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 740,
     height: 510,
@@ -81,10 +82,10 @@ function createWindow() {
   mainWindow.removeMenu();
   mainWindow.setResizable(false);
   mainWindow.setAlwaysOnTop(true, 'screen');
-
   mainWindow.webContents.openDevTools({ mode: 'detach' });
 }
 
+//Obtener la carpeta temporal
 ipcMain.handle('get-temp-folder', () => tempFolder);
 
 // Manejar el evento IPC para abrir el cuadro de diálogo de archivos
@@ -100,28 +101,46 @@ ipcMain.handle('dialog:openFile', async () => {
 ipcMain.handle('execute-compare-files', async (event, file1, file2, tempFolder) => {
   errorScript = false;
 
-  execFile(executablePath, [file1, file2, tempFolder], function(err, data) {
+  comparisonProcess = execFile(executablePath, [file1, file2, tempFolder], async (err, data) => {
     if (err) {
+
+      if (comparisonProcess === null) {
+        console.log('Comparison process was killed.');
+        return;
+      }
+
       errorScript = true;
       event.sender.send('error-script', errorScript);
       console.error(err);
       return;
     }
+
     console.log(data.toString());
 
-    const comparisonFilePath = path.join(tempFolder, 'comparison.xlsx');
-    fs.access(comparisonFilePath)
-      .then(() => {
-        event.sender.send('comparison-file-created', comparisonFilePath);
-      })
-      .catch((err) => {
-        console.error('Comparison file not found:', err);
-      });
+    try {
+      const comparisonFilePath = path.join(tempFolder, 'comparison.xlsx');
+      await fs.access(comparisonFilePath);
+      event.sender.send('comparison-file-created', comparisonFilePath);
+    } catch (err) {
+      console.error('Comparison file not found:', err);
+      event.sender.send('error-script', true);
+    }
   });
 });
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+
+// Manejar el evento de cancelacion de la comparación
+ipcMain.on('cancel-comparison', (event) => {
+  if (comparisonProcess) {
+    comparisonProcess.kill();
+    comparisonProcess = null;
+    event.sender.send('comparison-cancelled', true);
+    console.log('Comparison process cancelled.');
+  } else {
+    event.sender.send('comparison-cancelled', false);
+    console.log('No comparison process to cancel.');
+  }
+});
+
 
 ipcMain.handle('save-comparison-file', async (event, comparisonFilePath) => {
   const result = await dialog.showSaveDialog({
@@ -158,10 +177,10 @@ ipcMain.handle('clear-loaded-files', async () => {
     console.error('Failed to clear loaded files:', err);
   }
 });
+
 app.whenReady().then(async () => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron');
-
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
   // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
@@ -191,6 +210,3 @@ app.on('window-all-closed', async () => {
     app.quit();
   }
 });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.

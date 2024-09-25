@@ -31,11 +31,17 @@ export default function NewFileZone({ filePaths }) {
     };
     window.addEventListener('comparison-file-created', handleComparisonFileCreated);
 
+    const handleComparisonCancelled = () => {
+      setIsComparing(false);
+    };
+    window.addEventListener('comparison-cancelled', handleComparisonCancelled);
+
     return () => {
       window.removeEventListener('error-script', handleScriptError);
       window.removeEventListener('comparison-file-created', handleComparisonFileCreated);
+      window.removeEventListener('comparison-cancelled', handleComparisonCancelled);
     };
-  });
+  }, []);
 
   useEffect(() => {
     if (isErrorFromScript) {
@@ -48,9 +54,9 @@ export default function NewFileZone({ filePaths }) {
     await window.api.executeCompareFiles(filePaths.SIIA[0], filePaths.CH[0], tempFolderPath);
   };
 
-  const handleCancelClick = () => {
+  const handleCancelClick = async () => {
+    await window.api.cancelComparison();
     setIsComparing(false);
-    // Lógica para detener el proceso de comparación
   };
 
   const handleDownloadClick = async (event) => {
@@ -175,6 +181,8 @@ export default function NewFileZone({ filePaths }) {
           width='100px'
           text='Compare'
           backgroundColor={((filePaths.SIIA.length >= 1) && (filePaths.CH.length >= 1)) ? '#05549D' : '#aaa'}
+          backgroundColorOnHover = '#2C6FAC'
+          backgroundColorOnClic = '#598DBE'
           borderRadius='10px'
           textColor='white'
           position='absolute'
@@ -183,6 +191,7 @@ export default function NewFileZone({ filePaths }) {
           cursor='pointer'
           disabled={((filePaths.SIIA.length >= 1) && (filePaths.CH.length >= 1)) ? false : true}
           onClick={handleCompareClick}
+          fontSize='14px'
         />
       )}
 
