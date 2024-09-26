@@ -146,6 +146,9 @@ export default function NewFileZone({ filePaths }) {
     },
     fileSize: {
       fontSize: '10px',
+      marginTop: '5px',
+      color: '#CDCACA',
+      fontWeight: 'bold',
     },
     iconContainer: {
       display: 'flex',
@@ -164,7 +167,7 @@ export default function NewFileZone({ filePaths }) {
           backgroundColor={((filePaths.SIIA.length >= 1) && (filePaths.CH.length >= 1)) ? '#05549D' : '#aaa'}
           backgroundColorOnHover = '#2C6FAC'
           backgroundColorOnClic = '#598DBE'
-          borderRadius='10px'
+          borderRadius='5px'
           textColor='white'
           position='absolute'
           top='7.5px'
@@ -179,7 +182,7 @@ export default function NewFileZone({ filePaths }) {
       {isComparing && (
         <>
           <div style={style.iconContainer}>
-            <img src={DroppedFileIcon} alt="Dropped File Icon" style={{ width: '16px', height: '16px', marginRight: '5px' }} />
+            <img src={DroppedFileIcon} alt="Dropped File Icon" style={{ width: '16px', height: '16px', marginRight: '5px'}} />
             <p style={style.comparingText}>Comparing</p>
           </div>
           <div>
@@ -205,9 +208,11 @@ export default function NewFileZone({ filePaths }) {
             fontSize='13px'
             position='absolute'
             top='7.5px'
-            left='572.5px'
+            left='560px'
             cursor='pointer'
             fontWeight='bold'
+            backgroundColorOnHover='#FCEBEB'
+            backgroundColorOnClic='#FEE0E0'
             onClick={handleCancelClick}
             style={style.button}
           />
@@ -234,16 +239,18 @@ export default function NewFileZone({ filePaths }) {
             textColor='white'
             position='absolute'
             top='7.5px'
-            left='572.5px'
+            left='560px'
             cursor='pointer'
             fontWeight='bold'
+            fontSize = '13px'
             onClick={handleDownloadClick}
             style={style.button}
           />
           <Button
             height='32px'
-            width='130px'
+            width='90px'
             text='Clear'
+            fontSize = '13px'
             backgroundColor='#ba3c3c'
             backgroundColorOnHover='#ef5350'
             backgroundColorOnClic='#bd2130'
@@ -251,7 +258,7 @@ export default function NewFileZone({ filePaths }) {
             textColor='white'
             position='absolute'
             top='62px'
-            left='533px'
+            left='560px'
             cursor='pointer'
             fontWeight='bold'
             border='none'
