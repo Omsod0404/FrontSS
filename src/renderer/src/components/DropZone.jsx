@@ -123,7 +123,7 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      html: 'Archivo inválido. Solo se permiten archivos <b>.xls</b> y <b>.xlsx</b>.',
+      html: 'Invalid type of file. Only <b>.xls</b> y <b>.xlsx</b> are supported.',
       showConfirmButton: true,
       confirmButtonText: 'Ok',
       confirmButtonColor: '#e53e3e',
@@ -141,7 +141,7 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
     Swal.fire({
       icon: 'question',
       title: 'Alerta',
-      html: 'No se seleccionó ningun archivo.',
+      html: 'Any file was selected.',
       showConfirmButton: true,
       confirmButtonText: 'Ok',
       confirmButtonColor: '#05549D',

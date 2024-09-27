@@ -1,5 +1,5 @@
-appId: com.electron.app
-productName: test
+appId: com.centro.de.desarrollo
+productName: Hourly Load Comparator CD
 directories:
   buildResources: build
 files:
@@ -11,7 +11,7 @@ asarUnpack:
   - '**/*.{node,dll}'
 afterSign: build/notarize.js
 win:
-  executableName: test
+  executableName: Hourly Load Comparator CD
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
@@ -36,6 +36,10 @@ linux:
 appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
+prune: true
+asar: false
+compression: maximum
 publish:
   provider: generic
   url: https://example.com/auto-updates
+

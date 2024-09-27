@@ -82,7 +82,7 @@ export default function NewFileZone({ filePaths }) {
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      html: 'Error while comparing files, please try again. Take on mind the order of files',
+      html: 'Error while comparing files, please try again. Take on mind the order of the files',
       showConfirmButton: true,
       confirmButtonText: 'Ok',
       confirmButtonColor: '#e53e3e',
