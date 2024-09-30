@@ -31,6 +31,11 @@ const api = {
   //Cancelar la comparación
   cancelComparison: () => {
     ipcRenderer.send('cancel-comparison');
+  },
+
+  // Obtener el tamaño del archivo
+  getFileSize: (filePath) => {
+    return ipcRenderer.invoke('get-file-size', filePath);
   }
 }
 

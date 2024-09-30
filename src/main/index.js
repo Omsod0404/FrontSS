@@ -164,6 +164,17 @@ ipcMain.handle('save-comparison-file', async (event, comparisonFilePath) => {
   }
 });
 
+// Manejar el evento IPC para obtener el tamaño de un archivo
+ipcMain.handle('get-file-size', async (event, filePath) => {
+  try {
+    const stats = await fs.stat(filePath);
+    return (stats.size / 1024).toFixed(2) + ' KB'; // Convert size to KB and format
+  } catch (error) {
+    console.error('Failed to get file size:', error);
+    throw error;
+  }
+});
+
 // Manejar el evento IPC para limpiar los archivos cargados
 ipcMain.handle('clear-loaded-files', async () => {
   try {
