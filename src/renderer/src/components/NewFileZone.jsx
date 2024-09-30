@@ -11,6 +11,7 @@ export default function NewFileZone({ filePaths }) {
   const [isErrorFromScript, setIsErrorFromScript] = useState(false);
   const [comparisonFilePath, setComparisonFilePath] = useState('');
   const [executablePath, setExecutablePath] = useState('');
+  const [fileInfo, setFileInfo] = useState({ name: '', size: '' });
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -30,10 +31,13 @@ export default function NewFileZone({ filePaths }) {
     };
     window.addEventListener('error-script', handleScriptError);
 
-    const handleComparisonFileCreated = (event) => {
+    const handleComparisonFileCreated = async (event) => {
       setComparisonFilePath(event.detail);
       setIsComparing(false);
       setIsNewFileReady(true);
+      const name = event.detail.split('\\').pop(); // Obtener solo el nombre del archivo
+      const size = await window.api.getFileSize(event.detail); // Obtener el tamaño del archivo
+      setFileInfo({ name, size }); // Actualizar nombre y tamaño del archivo
     };
     window.addEventListener('comparison-file-created', handleComparisonFileCreated);
 
@@ -224,8 +228,8 @@ export default function NewFileZone({ filePaths }) {
           <div style={style.iconContainer}>
             <img src={DroppedFileIcon} alt="Dropped File Icon" style={{ width: '16px', height: '16px', marginRight: '5px' }} />
             <div style={style.fileInfo}>
-              <span style={style.fileName}>comparing.xls</span>
-              <span style={style.fileSize}>15 KB</span>
+              <span style={style.fileName}>{fileInfo.name}</span>
+              <span style={style.fileSize}>{fileInfo.size}</span>
             </div>
           </div>
           <Button
