@@ -44,7 +44,7 @@ export default function MainBoard() {
   return (
     <div style={styles.mainBoard}>
 
-      <Header title='Upload Files'/>
+      <Header title='Subir archivos'/>
 
       <form style={styles.uploadForm}>
 
@@ -62,7 +62,7 @@ export default function MainBoard() {
         </div>
 
         <div style={styles.details}>
-          <p style={{margin: 0, padding: 0}}>Supported formats: XLS, XLSX</p>
+          <p style={{margin: 0, padding: 0}}>Formatos soportados: XLS, XLSX</p>
         </div>
 
         <NewFileZone filePaths={filePaths}/>
@@ -70,7 +70,7 @@ export default function MainBoard() {
       </form>
 
       <Button 
-        text='User Guide'
+        text='Guia de usuario'
         icon={helpIcon}
         iconSize='14px'
         height='auto'
@@ -78,6 +78,7 @@ export default function MainBoard() {
         margin='0 0 0 30px'
         textDecoration='underline #A2A2A2'
         cursor='pointer'
+        fontWeight='normal'
       />
 
     </div>

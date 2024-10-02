@@ -86,7 +86,7 @@ export default function NewFileZone({ filePaths }) {
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      html: 'Error while comparing files, please try again. Take on mind the order of the files',
+      html: 'Error al comparar archivos. Por favor, inténtelo de nuevo. Toma en cuenta el orden de los archivos',
       showConfirmButton: true,
       confirmButtonText: 'Ok',
       confirmButtonColor: '#e53e3e',
@@ -167,7 +167,7 @@ export default function NewFileZone({ filePaths }) {
         <Button
           height='35px'
           width='100px'
-          text='Compare'
+          text='Comparar'
           backgroundColor={((filePaths.SIIA.length >= 1) && (filePaths.CH.length >= 1)) ? '#05549D' : '#aaa'}
           backgroundColorOnHover = '#2C6FAC'
           backgroundColorOnClic = '#598DBE'
@@ -187,7 +187,7 @@ export default function NewFileZone({ filePaths }) {
         <>
           <div style={style.iconContainer}>
             <img src={DroppedFileIcon} alt="Dropped File Icon" style={{ width: '16px', height: '16px', marginRight: '5px'}} />
-            <p style={style.comparingText}>Comparing</p>
+            <p style={style.comparingText}>Comparando, espera un momento...</p>
           </div>
           <div>
           <Oval
@@ -204,7 +204,7 @@ export default function NewFileZone({ filePaths }) {
           <Button
             height='35px'
             width='90px'
-            text='Cancel'
+            text='Cancelar'
             backgroundColor='white'
             borderRadius='5px'
             border= '1px solid #E3E3E3'
@@ -235,7 +235,7 @@ export default function NewFileZone({ filePaths }) {
           <Button
             height='35px'
             width='90px'
-            text='Download'
+            text='Descargar'
             backgroundColor='green'
             backgroundColorOnHover='#28a745'
             backgroundColorOnClic='#218838'
@@ -253,7 +253,7 @@ export default function NewFileZone({ filePaths }) {
           <Button
             height='32px'
             width='90px'
-            text='Clear'
+            text='Limpiar'
             fontSize = '13px'
             backgroundColor='#ba3c3c'
             backgroundColorOnHover='#ef5350'

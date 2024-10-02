@@ -123,7 +123,7 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      html: 'Invalid type of file. Only <b>.xls</b> y <b>.xlsx</b> are supported.',
+      html: 'Tipo de archivo invalido. Solo se admiten archivos del tipo <b>.xls</b> y <b>.xlsx</b>.',
       showConfirmButton: true,
       confirmButtonText: 'Ok',
       confirmButtonColor: '#e53e3e',
@@ -141,7 +141,7 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
     Swal.fire({
       icon: 'question',
       title: 'Alerta',
-      html: 'Any file was selected.',
+      html: 'No se selecciono ningun archivo.',
       showConfirmButton: true,
       confirmButtonText: 'Ok',
       confirmButtonColor: '#05549D',
@@ -172,7 +172,7 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
       <input {...getInputProps()} />
 
       {isDragActive ? (
-        <p style={dropZoneStyle.dropText}>Drop the files here...</p>
+        <p style={dropZoneStyle.dropText}>Deja caer el archivo aquí...</p>
       ) : (
         <div style={dropZoneStyle.subContainer}>
           {/* Mostrar el nombre del archivo y el ícono correspondiente */}
@@ -188,8 +188,8 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
               <span style={dropZoneStyle.fileSourceText}>{text_file}</span>
               <img src={CargaArchivos} style={dropZoneStyle.iconSubida} alt="Upload" draggable='false'/>
               <p style={dropZoneStyle.dropText}>
-                Drag and Drop File or
-                <span style={dropZoneStyle.textChoose} onClick={handleFileDialog}>Choose File</span>
+                Arrastra tu archivo o haz
+                <span style={dropZoneStyle.textChoose} onClick={handleFileDialog}>clic</span>
               </p>
             </>
           )}
