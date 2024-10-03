@@ -12,6 +12,9 @@ const executablePath = isPackaged
 let errorScript = false;
 let comparisonProcess = null;
 
+let mainWindow;
+let pdfWindow;
+
 //funcion para crear el folder temporal
 async function createTempFolder(tempFolder) {
   try {
@@ -49,7 +52,7 @@ async function clearFolder(tempFolder) {
 
 //funcion para crear la ventana
 function createWindow() {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 740,
     height: 510,
     show: false,
@@ -84,8 +87,15 @@ function createWindow() {
 
   mainWindow.removeMenu();
   mainWindow.setResizable(false);
-  //mainWindow.setAlwaysOnTop(true, 'screen');
-  //mainWindow.webContents.openDevTools({ mode: 'detach' });
+  mainWindow.setAlwaysOnTop(true, 'screen');
+  mainWindow.webContents.openDevTools({ mode: 'detach' });
+
+  mainWindow.on('closed', () => {
+    if (pdfWindow) {
+      pdfWindow.close();
+    }
+    mainWindow = null;
+  });
 }
 
 //Obtener la carpeta temporal
@@ -187,6 +197,36 @@ ipcMain.handle('clear-loaded-files', async () => {
     console.error('Failed to clear loaded files:', err);
   }
 });
+
+// Evento para abrir el PDF
+ipcMain.on('open-user-guide', () => {
+  try {
+    if (!pdfWindow) {
+      pdfWindow = new BrowserWindow({
+        width: 800,
+        height: 600,
+        webPreferences: {
+          nodeIntegration: false,
+          contextIsolation: true,
+        },
+    });
+  
+    const pdfPath = isPackaged
+      ? path.join(process.resourcesPath, 'executables',)
+      : path.resolve(__dirname, '../../src/renderer/src/executables');
+
+    pdfWindow.removeMenu();
+    pdfWindow.loadFile(pdfPath);
+
+    pdfWindow.on('closed', () => {
+      pdfWindow = null;
+    });
+  }
+  } catch (error) {
+    console.error('Failed to open user guide:', error);
+  }
+});
+
 
 app.whenReady().then(async () => {
   // Set app user model id for windows

@@ -41,6 +41,10 @@ export default function MainBoard() {
     CH: [],
   });
 
+  const handleOpenPDF = () => {
+    window.electronAPI.openUserGuide(); 
+  };
+
   return (
     <div style={styles.mainBoard}>
 
@@ -79,6 +83,7 @@ export default function MainBoard() {
         textDecoration='underline #A2A2A2'
         cursor='pointer'
         fontWeight='normal'
+        onClick={handleOpenPDF}
       />
 
     </div>

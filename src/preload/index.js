@@ -3,7 +3,8 @@ import { electronAPI } from "@electron-toolkit/preload";
 
 // Exponemos la función para abrir el diálogo de selección de archivos
 contextBridge.exposeInMainWorld('electronAPI', {
-  openFileDialog: () => ipcRenderer.invoke('dialog:openFile') // Aquí invocamos el evento para abrir el diálogo
+  openFileDialog: () => ipcRenderer.invoke('dialog:openFile'),
+  openUserGuide: () => ipcRenderer.send('open-user-guide')
 });
 
 //API personalzada
