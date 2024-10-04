@@ -6,9 +6,13 @@ import { exec, execFile } from 'child_process';
 
 const tempFolder = path.join(app.getPath('temp'), 'temp-folder'); // Carpeta temporal para guardar los archivos se une la el directorio actual con la carpeta temp
 const isPackaged = app.isPackaged;
+
 const executablePath = isPackaged
-  ? path.join(process.resourcesPath, 'executables', 'Comparacion_SIIA_CH_Lite.exe')
-  : path.resolve(__dirname, '../../src/renderer/src/executables/Comparacion_SIIA_CH_Lite.exe');
+  ? path.join(process.resourcesPath, 'app/src/renderer/src/executables/Comparacion_SIIA_CH_Lite.exe') // Ruta empaquetada
+  : path.resolve(__dirname, '../../src/renderer/src/executables/Comparacion_SIIA_CH_Lite.exe'); // Ruta en desarrollo
+
+console.log('Executable path:', executablePath);
+
 let errorScript = false;
 let comparisonProcess = null;
 
