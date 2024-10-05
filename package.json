@@ -15,7 +15,9 @@
     "postinstall": "electron-builder install-app-deps",
     "build:win": "npm run build && electron-builder --win --config",
     "build:mac": "npm run build && electron-builder --mac --config",
-    "build:linux": "npm run build && electron-builder --linux --config"
+    "build:linux": "npm run build && electron-builder --linux --config",
+    "app:dir": "electron-builder --dir",
+    "app:dist": "electron-builder"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
@@ -42,10 +44,17 @@
     "vite": "^3.1.8"
   },
   "build": {
+    "appId": "com.comparacionCD.app",
+    "compression" : "maximum",
+    "nsis" : {
+      "oneClick" : false,
+      "deleteAppDataOnUninstall" : true
+    },
+    "electronLanguages" : "es-MX",
+    "productName" : "Comparador CD",
     "files": [
       "src/**/*",
-      "out/**/*",
-      "src/renderer/src/executables/*"
+      "out/**/*"
     ],
     "extraResources": [
       {
@@ -58,7 +67,8 @@
     ],
     "win": {
       "target": "nsis",
-      "icon": "build/icon.ico"
+      "icon": "build/icon.ico",
+      "compression" : "maximum"
     },
     "mac": {
       "target": "dmg",
