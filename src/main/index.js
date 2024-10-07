@@ -91,7 +91,7 @@ function createWindow() {
 
   mainWindow.removeMenu();
   mainWindow.setResizable(false);
-  mainWindow.setAlwaysOnTop(true, 'screen');
+  // mainWindow.setAlwaysOnTop(true, 'screen');
   mainWindow.webContents.openDevTools({ mode: 'detach' });
 
   mainWindow.on('closed', () => {
