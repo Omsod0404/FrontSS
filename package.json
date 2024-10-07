@@ -50,7 +50,6 @@
       "oneClick" : false,
       "deleteAppDataOnUninstall" : true
     },
-    "electronLanguages" : "es-MX",
     "productName" : "Comparador CD",
     "files": [
       "src/**/*",
