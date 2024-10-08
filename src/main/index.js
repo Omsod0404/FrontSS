@@ -8,8 +8,13 @@ const tempFolder = path.join(app.getPath('temp'), 'temp-folder'); // Carpeta tem
 const isPackaged = app.isPackaged;
 
 const executablePath = isPackaged
-  ? path.join(process.resourcesPath, 'app/src/renderer/src/executables/Comparacion_SIIA_CH_Lite.exe') // Ruta empaquetada
+  ? path.join(process.resourcesPath, 'executables', 'Comparacion_SIIA_CH_Lite.exe') // Ruta empaquetada
   : path.resolve(__dirname, '../../src/renderer/src/executables/Comparacion_SIIA_CH_Lite.exe'); // Ruta en desarrollo
+
+
+const roundedIconPath = isPackaged
+  ? path.join(process.resourcesPath, 'images', 'roundedicon.ico')
+  : path.resolve(__dirname, '../../src/renderer/src/images/roundedicon.ico');
 
 console.log('Executable path:', executablePath);
 
@@ -60,6 +65,8 @@ function createWindow() {
     width: 740,
     height: 510,
     show: false,
+    title: 'Comparador CD',
+    icon: roundedIconPath,
     autoHideMenuBar: true,
     ...(process.platform === 'linux'
       ? {
@@ -91,8 +98,6 @@ function createWindow() {
 
   mainWindow.removeMenu();
   mainWindow.setResizable(false);
-  mainWindow.setAlwaysOnTop(true, 'screen');
-  mainWindow.webContents.openDevTools({ mode: 'detach' });
 
   mainWindow.on('closed', () => {
     if (pdfWindow) {
@@ -209,6 +214,9 @@ ipcMain.on('open-user-guide', () => {
       pdfWindow = new BrowserWindow({
         width: 800,
         height: 600,
+        show: false,
+        icon: roundedIconPath,
+        title: 'Guía de Usuario',
         webPreferences: {
           nodeIntegration: false,
           contextIsolation: true,
@@ -216,8 +224,16 @@ ipcMain.on('open-user-guide', () => {
     });
   
     const pdfPath = isPackaged
-      ? path.join(process.resourcesPath, 'executables',)
-      : path.resolve(__dirname, '../../src/renderer/src/executables');
+      ? path.join(process.resourcesPath, 'documents', 'Guia De Usuario.pdf')
+      : path.resolve(__dirname, '../../src/renderer/src/documents/Guia De Usuario.pdf');
+
+    pdfWindow.on('ready-to-show', () => {
+      pdfWindow.show();
+    });
+
+    pdfWindow.on('page-title-updated', (e) => {
+      e.preventDefault();
+    });
 
     pdfWindow.removeMenu();
     pdfWindow.loadFile(pdfPath);

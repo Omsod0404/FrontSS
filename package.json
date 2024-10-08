@@ -62,6 +62,20 @@
         "filter": [
           "**/*"
         ]
+      },
+      {
+        "from": "src/renderer/src/documents/",
+        "to": "documents/",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "src/renderer/src/images/",
+        "to": "images/",
+        "filter": [
+          "**/*"
+        ]
       }
     ],
     "win": {
