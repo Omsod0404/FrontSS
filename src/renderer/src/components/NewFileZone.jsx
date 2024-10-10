@@ -3,6 +3,7 @@ import Button from './Button.jsx'; // Asegúrate de que el botón esté correcta
 import Swal from 'sweetalert2';
 import DroppedFileIcon from '../resources/dropped_file_icon.png'; // Asegúrate de tener el ícono en la ruta correcta
 import { Oval } from 'react-loader-spinner';
+import path from 'path-browserify';
 
 export default function NewFileZone({ filePaths }) {
   const [isComparing, setIsComparing] = useState(false);
@@ -35,7 +36,7 @@ export default function NewFileZone({ filePaths }) {
       setComparisonFilePath(event.detail);
       setIsComparing(false);
       setIsNewFileReady(true);
-      const name = event.detail.split('\\').pop(); // Obtener solo el nombre del archivo
+      const name = path.basename(event.detail); // Obtener solo el nombre del archivo
       const size = await window.api.getFileSize(event.detail); // Obtener el tamaño del archivo
       setFileInfo({ name, size }); // Actualizar nombre y tamaño del archivo
     };
