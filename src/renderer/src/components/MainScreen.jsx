@@ -1,12 +1,12 @@
 import React from 'react'
-import logoCD2 from '../resources/logoCD2.png'
-import logoUAQ from '../resources/logoUAQ.png'
+import logoCD2 from '../resources/LogoCD2.png'
+import logoUAQ from '../resources/LogoUAQ.png'
 import MainBoard from './MainBoard.jsx'
 import { useDropzone } from 'react-dropzone'
 
 export default function MainScreen() {
 
-  
+
   return (
     <div style={mainScreenStyle.mainContainer}>
       <div style={mainScreenStyle.logosContainer}>
@@ -39,7 +39,7 @@ const mainScreenStyle = {
     height: '60px',
     marginLeft: '20px',
     marginRight: '20px',
-    
+
   },
   contentContainer: {
     height: '490px',

@@ -3,7 +3,7 @@ import Header from './Header.jsx';
 import DropZone from './DropZone.jsx';
 import NewFileZone from './NewFileZone.jsx';
 import Button from './Button.jsx';
-import helpIcon from '../resources/helpIcon.png';
+import helpIcon from '../resources/HelpIcon.png';
 
 export default function MainBoard() {
 
@@ -42,7 +42,7 @@ export default function MainBoard() {
   });
 
   const handleOpenPDF = () => {
-    window.electronAPI.openUserGuide(); 
+    window.electronAPI.openUserGuide();
   };
 
   return (
@@ -53,15 +53,15 @@ export default function MainBoard() {
       <form style={styles.uploadForm}>
 
         <div style={styles.dropZoneContainer}>
-            <DropZone 
-              text_file='SIIA' 
-              filePaths={filePaths.SIIA} 
-              setFilePaths={(paths) => setFilePaths({ ...filePaths, SIIA: paths })} 
+            <DropZone
+              text_file='SIIA'
+              filePaths={filePaths.SIIA}
+              setFilePaths={(paths) => setFilePaths({ ...filePaths, SIIA: paths })}
               />
-            <DropZone 
-              text_file='CH' 
-              filePaths={filePaths.CH} 
-              setFilePaths={(paths) => setFilePaths({ ...filePaths, CH: paths })} 
+            <DropZone
+              text_file='CH'
+              filePaths={filePaths.CH}
+              setFilePaths={(paths) => setFilePaths({ ...filePaths, CH: paths })}
               />
         </div>
 
@@ -73,7 +73,7 @@ export default function MainBoard() {
 
       </form>
 
-      <Button 
+      <Button
         text='Guia de usuario'
         icon={helpIcon}
         iconSize='14px'
