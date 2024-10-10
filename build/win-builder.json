@@ -3,6 +3,20 @@
     {
       "from": "src/renderer/src/executables/Comparacion_SIIA_CH_Lite.exe",
       "to": "executables/Comparacion_SIIA_CH_Lite.exe"
+    },
+    {
+      "from": "src/renderer/src/documents/",
+      "to": "documents/",
+      "filter": [
+        "**/*"
+      ]
+    },
+    {
+      "from": "src/renderer/src/images/",
+      "to": "images/",
+      "filter": [
+        "**/*"
+      ]
     }
   ]
 }

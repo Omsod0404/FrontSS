@@ -3,6 +3,20 @@
     {
       "from": "src/renderer/src/executables/Comparacion_mac",
       "to": "executables/Comparacion_mac"
+    },
+    {
+      "from": "src/renderer/src/documents/",
+      "to": "documents/",
+      "filter": [
+        "**/*"
+      ]
+    },
+    {
+      "from": "src/renderer/src/images/",
+      "to": "images/",
+      "filter": [
+        "**/*"
+      ]
     }
   ]
 }
