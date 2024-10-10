@@ -1,0 +1,8 @@
+{
+  "extraResources": [
+    {
+      "from": "src/renderer/src/executables/Comparacion_mac",
+      "to": "executables/Comparacion_mac"
+    }
+  ]
+}

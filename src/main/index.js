@@ -7,10 +7,15 @@ import { exec, execFile } from 'child_process';
 const tempFolder = path.join(app.getPath('temp'), 'temp-folder'); // Carpeta temporal para guardar los archivos se une la el directorio actual con la carpeta temp
 const isPackaged = app.isPackaged;
 
-const executablePath = isPackaged
-  ? path.join(process.resourcesPath, 'executables', 'Comparacion_SIIA_CH_Lite.exe') // Ruta empaquetada
-  : path.resolve(__dirname, '../../src/renderer/src/executables/Comparacion_SIIA_CH_Lite.exe'); // Ruta en desarrollo
+const executableName = process.platform === 'win32'
+  ? 'Comparacion_SIIA_CH_Lite.exe'
+  : (process.platform === 'darwin' ? 'Comparacion_mac' : 'Comparacion_linux');
 
+const executablePath = isPackaged
+  ? path.join(process.resourcesPath, `executables/${executableName}`)
+  : path.resolve(__dirname, `../../src/renderer/src/executables/${executableName}`);
+
+console.log('Executable path:', executablePath);
 
 const roundedIconPath = isPackaged
   ? path.join(process.resourcesPath, 'images', 'roundedicon.ico')
@@ -37,13 +42,27 @@ async function createTempFolder(tempFolder) {
     await fs.mkdir(tempFolder, {recursive: true});
     console.log('Temp folder created at:', tempFolder);
 
-    exec('attrib +h ' + tempFolder, function(err, stdout, stderr) {
-      if (err) {
-        console.error('Failed to hide temp folder:', err);
-      } else {
-        console.log('Temp folder hidden');
-      }
-    });
+    const hideTempFolder = (command) => {
+      exec(command, (err) => {
+        if (err) {
+          console.error('Failed to hide temp folder:', err);
+        } else {
+          console.log('Temp folder hidden');
+        }
+      });
+    };
+
+    process.platform === 'win32'
+      ? hideTempFolder('attrib +h ${tempFolder}')
+  : process.platform === 'darwin'
+      ? hideTempFolder('chflags hidden ${tempFolder}')
+  : process.platform === 'linux'
+      ? await (async () => {
+        const hiddenTempFolder = path.join(path.dirname(tempFolder), '.' + path.basename(tempFolder));
+        await fs.mkdir(hiddenTempFolder, {recursive: true});
+        console.log('Temp folder created and hidden at:', hiddenTempFolder);
+      })()
+      : console.error('Unsupported platform:', process.platform);
   } catch (error) {
     console.error('Failed to create temp folder:', error);
   }
@@ -126,6 +145,15 @@ ipcMain.handle('dialog:openFile', async () => {
 // Manejar el evento IPC para ejecutar la comparación de archivos
 ipcMain.handle('execute-compare-files', async (event, file1, file2, tempFolder) => {
   errorScript = false;
+
+  try {
+    await fs.access(executablePath);
+    console.log('Executable exists and is accessible:', executablePath);
+  } catch (err) {
+    console.error('Executable not found or not accessible:', executablePath);
+    event.sender.send('error-script', true);
+    return;
+  }
 
   comparisonProcess = execFile(executablePath, [file1, file2, tempFolder], async (err, data) => {
     if (err) {
@@ -223,7 +251,7 @@ ipcMain.on('open-user-guide', () => {
           contextIsolation: true,
         },
     });
-  
+
     const pdfPath = isPackaged
       ? path.join(process.resourcesPath, 'documents', 'Guia De Usuario.pdf')
       : path.resolve(__dirname, '../../src/renderer/src/documents/Guia De Usuario.pdf');
