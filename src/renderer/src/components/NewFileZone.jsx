@@ -36,8 +36,9 @@ export default function NewFileZone({ filePaths }) {
       setComparisonFilePath(event.detail);
       setIsComparing(false);
       setIsNewFileReady(true);
-      const name = path.basename(event.detail); // Obtener solo el nombre del archivo
-      const size = await window.api.getFileSize(event.detail); // Obtener el tamaño del archivo
+      const filePath = event.detail;
+      const name = path.basename(filePath.replace(/\\/g, '/')); // Reemplazar \ por / para asegurar compatibilidad en windows y unix
+      const size = await window.api.getFileSize(filePath); // Obtener el tamaño del archivo
       setFileInfo({ name, size }); // Actualizar nombre y tamaño del archivo
     };
     window.addEventListener('comparison-file-created', handleComparisonFileCreated);
