@@ -41,8 +41,8 @@ const api = {
 }
 
 //Exponer los eventos
-ipcRenderer.on('error-script', (_, error) => {
-  window.dispatchEvent(new CustomEvent('error-script', { detail: error }));
+ipcRenderer.on('error-script', (_, error, message) => {
+  window.dispatchEvent(new CustomEvent('error-script', { detail: {error, message} }));
 });
 
 ipcRenderer.on('comparison-file-created', (_, comparisonFilePath) => {

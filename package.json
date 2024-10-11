@@ -1,7 +1,7 @@
 {
   "name": "hourly-load-comparator-cd",
   "version": "1.0.0",
-  "productName": "Hourly Load Comparator CD",
+  "productName": "Comparador CD",
   "description": "An Electron application with React",
   "main": "./out/main/index.js",
   "author": "Centro de Desarrollo",
@@ -43,32 +43,5 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "vite": "^3.1.8"
-  },
-  "build": {
-    "appId": "com.comparacionCD.app",
-    "compression" : "maximum",
-    "nsis" : {
-      "oneClick" : false,
-      "deleteAppDataOnUninstall" : true,
-      "allowToChangeInstallationDirectory" : true,
-      "installerSidebar" : "build/installerSidebar.bmp"
-    },
-    "productName" : "Comparador CD",
-    "files": [
-      "src/**/*",
-      "out/**/*"
-    ],
-    "win": {
-      "target": "nsis",
-      "icon": "build/icon.ico"
-    },
-    "mac": {
-      "target": "dmg",
-      "icon": "build/icon.icns"
-    },
-    "linux": {
-      "target": "AppImage",
-      "icon": "build/icon.png"
-    }
   }
 }

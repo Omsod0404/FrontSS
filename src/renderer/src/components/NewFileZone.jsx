@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Button from './Button.jsx'; // Asegúrate de que el botón esté correctamente importado
+import Button from './Button.jsx';
 import Swal from 'sweetalert2';
-import DroppedFileIcon from '../resources/dropped_file_icon.png'; // Asegúrate de tener el ícono en la ruta correcta
+import DroppedFileIcon from '../resources/dropped_file_icon.png'; 
 import { Oval } from 'react-loader-spinner';
 import path from 'path-browserify';
 
@@ -10,6 +10,7 @@ export default function NewFileZone({ filePaths }) {
   const [isNewFileReady, setIsNewFileReady] = useState(false);
   const [tempFolderPath, setTempFolderPath] = useState('');
   const [isErrorFromScript, setIsErrorFromScript] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [comparisonFilePath, setComparisonFilePath] = useState('');
   const [executablePath, setExecutablePath] = useState('');
   const [fileInfo, setFileInfo] = useState({ name: '', size: '' });
@@ -28,7 +29,8 @@ export default function NewFileZone({ filePaths }) {
 
   useEffect(() => {
     const handleScriptError = (event) => {
-      setIsErrorFromScript(event.detail);
+      setIsErrorFromScript(event.detail.error);
+      setErrorMessage(event.detail.message);
     };
     window.addEventListener('error-script', handleScriptError);
 
@@ -57,6 +59,7 @@ export default function NewFileZone({ filePaths }) {
 
   useEffect(() => {
     if (isErrorFromScript) {
+      console.log('Error from script:', errorMessage);
       showErrorScript();
     }
   }, [isErrorFromScript]); // Se ejecuta cada vez que cambia isErrorFromScript
@@ -88,7 +91,7 @@ export default function NewFileZone({ filePaths }) {
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      html: 'Error al comparar archivos. Por favor, inténtelo de nuevo. Toma en cuenta el orden de los archivos',
+      html: 'Error al comparar archivos. <br><br> Por favor, inténtalo de nuevo. Verifique que los archivos sean los correctos',
       showConfirmButton: true,
       confirmButtonText: 'Ok',
       confirmButtonColor: '#e53e3e',

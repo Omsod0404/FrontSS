@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'; // Añadimos ipcMain y dialog
+import { app, shell, BrowserWindow, ipcMain, dialog, screen } from 'electron'; // Añadimos ipcMain y dialog
 import * as path from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import fs from 'fs/promises';
@@ -21,9 +21,8 @@ const roundedIconPath = isPackaged
   ? path.join(process.resourcesPath, 'images', 'roundedicon.ico')
   : path.resolve(__dirname, '../../src/renderer/src/images/roundedicon.ico');
 
-console.log('Executable path:', executablePath);
-
 let errorScript = false;
+let errorScriptMessage = '';
 let comparisonProcess = null;
 
 let mainWindow;
@@ -111,7 +110,8 @@ function createWindow() {
   // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']);
-    mainWindow.setAlwaysOnTop(true, 'screen');
+    //mainWindow.setAlwaysOnTop(true, 'screen');
+    mainWindow.webContents.openDevTools({ mode: 'detach' });
   } else {
     mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
   }
@@ -145,13 +145,14 @@ ipcMain.handle('dialog:openFile', async () => {
 // Manejar el evento IPC para ejecutar la comparación de archivos
 ipcMain.handle('execute-compare-files', async (event, file1, file2, tempFolder) => {
   errorScript = false;
+  errorScriptMessage = '';
 
   try {
     await fs.access(executablePath);
     console.log('Executable exists and is accessible:', executablePath);
   } catch (err) {
     console.error('Executable not found or not accessible:', executablePath);
-    event.sender.send('error-script', true);
+    event.sender.send('error-script', true, 'Error con el comparador de archivos. Por favor, contacte al administrador.');
     return;
   }
 
@@ -164,8 +165,11 @@ ipcMain.handle('execute-compare-files', async (event, file1, file2, tempFolder) 
       }
 
       errorScript = true;
-      event.sender.send('error-script', errorScript);
-      console.error(err);
+      errorScriptMessage = err.message.toString();
+      errorScriptMessage = errorScriptMessage.replace(/(\r\n|\n|\r)/gm, '');
+      errorScriptMessage = errorScriptMessage.split('Error: ')[1];
+      errorScriptMessage = errorScriptMessage.replace(/'/g, '');
+      event.sender.send('error-script', errorScript, errorScriptMessage);
       return;
     }
 
@@ -177,7 +181,7 @@ ipcMain.handle('execute-compare-files', async (event, file1, file2, tempFolder) 
       event.sender.send('comparison-file-created', comparisonFilePath);
     } catch (err) {
       console.error('Comparison file not found:', err);
-      event.sender.send('error-script', true);
+      event.sender.send('error-script', true, 'No se pudo generar el archivo. Por favor, contacte al administrador.');
     }
   });
 });
