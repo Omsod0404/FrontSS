@@ -62,7 +62,7 @@ export default function NewFileZone({ filePaths }) {
       console.log('Error from script:', errorMessage);
       showErrorScript();
     }
-  }, [isErrorFromScript]); // Se ejecuta cada vez que cambia isErrorFromScript
+  }, [isErrorFromScript, errorMessage]); // Se ejecuta cada vez que cambia isErrorFromScript
 
   const handleCompareClick = async () => {
     setIsComparing(true);
@@ -91,11 +91,49 @@ export default function NewFileZone({ filePaths }) {
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      html: 'Error al comparar archivos. <br><br> Por favor, inténtalo de nuevo. Verifique que los archivos sean los correctos',
+      html: `
+        Error al comparar archivos. <br><br> 
+        Por favor, inténtalo de nuevo. Verifique que los archivos sean los correctos.<br><br>
+        <button id="details-button" style="
+          background-color: #BFBFBF; 
+          color: white; 
+          border: none; 
+          padding: 5px 10px; 
+          border-radius: 5px; 
+          cursor: pointer; 
+          transition: background-color 0.3s ease;
+        ">
+          Ver más detalles
+        </button>
+        <div id="error-details" style="display: none; margin-top: 10px; color: #333;"></div>
+      `,
       showConfirmButton: true,
       confirmButtonText: 'Ok',
       confirmButtonColor: '#e53e3e',
       didOpen: () => {
+        const detailsButton = document.getElementById('details-button');
+        const errorDetails = document.getElementById('error-details');
+        let isDetailsVisible = false;  
+  
+        detailsButton.addEventListener('mouseover', () => {
+          detailsButton.style.backgroundColor = '#9C9C9C'; 
+        });
+        detailsButton.addEventListener('mouseout', () => {
+          detailsButton.style.backgroundColor = '#BFBFBF'; 
+        });
+  
+        detailsButton.addEventListener('click', () => {
+          isDetailsVisible = !isDetailsVisible;  
+          if (isDetailsVisible) {
+            errorDetails.style.display = 'block';  
+            errorDetails.innerHTML = `Detalles del error: <br> ${errorMessage}`;
+            detailsButton.innerHTML = 'Ocultar detalles';  
+          } else {
+            errorDetails.style.display = 'none';  
+            detailsButton.innerHTML = 'Ver más detalles';  
+          }
+        });
+  
         const popup = document.querySelector('.swal2-popup');
         if (popup) {
           popup.style.fontFamily = 'Arial, sans-serif';
@@ -103,7 +141,7 @@ export default function NewFileZone({ filePaths }) {
         }
       }
     }).then(() => {
-      setIsErrorFromScript(false); // Restablecer el estado tras el cierre del modal
+      setIsErrorFromScript(false); 
       setIsComparing(false);
     });
   };
@@ -220,8 +258,8 @@ export default function NewFileZone({ filePaths }) {
             left='560px'
             cursor='pointer'
             fontWeight='bold'
-            backgroundColorOnHover='#FCEBEB'
-            backgroundColorOnClic='#FEE0E0'
+            backgroundColorOnHover='#E4E4E4'
+            backgroundColorOnClic='#D6D6D6'
             onClick={handleCancelClick}
             style={style.button}
           />
