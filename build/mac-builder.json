@@ -1,4 +1,21 @@
 {
+  "appId": "com.comparacionCD.app",
+  "compression": "maximum",
+  "nsis": {
+    "oneClick": false,
+    "deleteAppDataOnUninstall": true,
+    "allowToChangeInstallationDirectory": true,
+    "installerSidebar": "build/installerSidebar.bmp"
+  },
+  "productName": "Comparador CD",
+  "files": [
+    "src/**/*",
+    "out/**/*"
+  ],
+  "mac": {
+    "target": "dmg",
+    "icon": "build/icon.icns"
+  },
   "extraResources": [
     {
       "from": "src/renderer/src/executables/Comparacion_mac",

@@ -5,6 +5,7 @@ import CargaArchivos from "../resources/ArchivosIcon.png";
 import DroppedFile from "../resources/dropped_file_icon.png";
 import Button from "./Button";
 import Swal from 'sweetalert2';
+import path from 'path-browserify'
 
 export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
   // Estado para manejar la carga de archivos
@@ -42,7 +43,7 @@ export default function DropZone({ text_file, setFilePaths, filePaths = [] }) {
         setFilePaths(filePaths);
         console.log(filePaths);
         setFileUploaded(true);
-        setFileName(filePaths[0].split('\\').pop());
+        setFileName(path.basename(filePaths[0]));
       } else {
       }
     } finally {
