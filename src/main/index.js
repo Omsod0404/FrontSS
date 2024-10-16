@@ -54,7 +54,7 @@ async function createTempFolder(tempFolder) {
     process.platform === 'win32'
       ? hideTempFolder('attrib +h ${tempFolder}')
   : process.platform === 'darwin'
-      ? hideTempFolder('chflags hidden ${tempFolder}')
+      ? hideTempFolder(`chflags hidden ${tempFolder}`)
   : process.platform === 'linux'
       ? await (async () => {
         const hiddenTempFolder = path.join(path.dirname(tempFolder), '.' + path.basename(tempFolder));

@@ -1,4 +1,21 @@
 {
+  "appId": "com.comparacionCD.app",
+  "compression": "maximum",
+  "nsis": {
+    "oneClick": false,
+    "deleteAppDataOnUninstall": true,
+    "allowToChangeInstallationDirectory": true,
+    "installerSidebar": "build/installerSidebar.bmp"
+  },
+  "productName": "Comparador CD",
+  "files": [
+    "src/**/*",
+    "out/**/*"
+  ],
+  "linux": {
+    "target": "AppImage",
+    "icon": "build/icon.png"
+  },
   "extraResources": [
     {
       "from": "src/renderer/src/executables/Comparacion_linux",
